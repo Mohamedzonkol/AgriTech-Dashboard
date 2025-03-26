@@ -1,11 +1,11 @@
 "use client";
 import { Bell, Search, ChevronDown, Tractor } from "lucide-react";
-import { UserDropdown } from "./UserDropdown";
-import { NotificationDropdown } from "./NotificationDropdown";
-import { SearchBar } from "./SearchBar";
+import UserDropdown from "./UserDropdown";
+import NotificationDropdown from "./NotificationDropdown";
+import SearchBar from "./SearchBar";
 import React from "react";
 
-export const Header = () => {
+const Header = () => {
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -24,3 +24,4 @@ export const Header = () => {
     </header>
   );
 };
+export default Header;

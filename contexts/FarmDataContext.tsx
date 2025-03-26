@@ -1,5 +1,12 @@
 "use client";
-import React, { createContext, useContext, ReactNode } from "react";
+
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import { useFarmData } from "../hooks/useFarmData";
 import { useWeatherData } from "../hooks/useWeatherData";
 import { useEquipmentData } from "../hooks/useEquipmentData";
@@ -15,6 +22,7 @@ import type {
 } from "../utils/types";
 
 type FarmDataContextType = {
+  isInitialized: boolean;
   cropYieldData: CropYieldData[];
   soilMoistureData: SoilMoistureData[];
   alerts: Alert[];
@@ -22,7 +30,7 @@ type FarmDataContextType = {
   equipmentData: Equipment[];
   currentWeather: WeatherData;
   weatherForecast: WeatherForecast[];
-  farmStatus: FarmStatus; // Add this line
+  farmStatus: FarmStatus;
   unreadAlerts: number;
   markAlertAsRead: (id: string) => void;
   markAllAlertsAsRead: () => void;
@@ -33,20 +41,23 @@ type FarmDataContextType = {
   setFieldData: (fields: Field[]) => void;
 };
 
-const FarmDataContext = createContext<FarmDataContextType | undefined>(
-  undefined
-);
+const FarmDataContext = createContext<FarmDataContextType | null>(null);
 
 export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
+  const [isInitialized, setIsInitialized] = useState(false);
   const farmData = useFarmData();
   const weatherData = useWeatherData();
   const equipmentData = useEquipmentData();
 
+  useEffect(() => {
+    setIsInitialized(true);
+  }, []);
+
   const contextValue = {
+    isInitialized,
     ...farmData,
     ...weatherData,
     ...equipmentData,
-    farmStatus: farmData.farmStatus, // Make sure this is included from your hook
   };
 
   return (
@@ -58,7 +69,7 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
 
 export const useFarmDataContext = () => {
   const context = useContext(FarmDataContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useFarmDataContext must be used within a FarmDataProvider"
     );

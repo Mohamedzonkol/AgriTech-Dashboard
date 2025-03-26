@@ -4,7 +4,7 @@ import { getWeatherIcon } from "../../utils/weatherUtils";
 import type { WeatherData } from "../../utils/types";
 import React from "react";
 
-export const WeatherCard = ({ weather }: { weather: WeatherData }) => {
+const WeatherCard = ({ weather }: { weather: WeatherData }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col col-span-1">
       <div className="flex justify-between items-center mb-4">
@@ -47,3 +47,4 @@ export const WeatherCard = ({ weather }: { weather: WeatherData }) => {
     </div>
   );
 };
+export default WeatherCard;

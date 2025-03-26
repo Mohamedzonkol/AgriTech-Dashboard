@@ -2,7 +2,7 @@
 import React from "react";
 import { NAV_TABS } from "../../../utils/constants";
 
-export const NavTabs = ({
+const NavTabs = ({
   selectedTab,
   setSelectedTab,
 }: {
@@ -29,3 +29,4 @@ export const NavTabs = ({
     </div>
   );
 };
+export default NavTabs;

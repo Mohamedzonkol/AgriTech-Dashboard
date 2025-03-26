@@ -4,11 +4,7 @@ import type { WeatherForecast as WeatherForecastType } from "../../utils/types";
 import React from "react";
 import { Wind } from "lucide-react";
 
-export const WeatherForecast = ({
-  forecast,
-}: {
-  forecast: WeatherForecastType[];
-}) => {
+const WeatherForecast = ({ forecast }: { forecast: WeatherForecastType[] }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 col-span-1">
       <h2 className="text-xl font-bold text-gray-800 mb-4">5-Day Forecast</h2>
@@ -49,3 +45,4 @@ export const WeatherForecast = ({
     </div>
   );
 };
+export default WeatherForecast;

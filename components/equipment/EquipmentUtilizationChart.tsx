@@ -12,7 +12,7 @@ import { CHART_COLORS } from "../../utils/constants";
 import type { Equipment } from "../../utils/types";
 import React from "react";
 
-export const EquipmentUtilizationChart = ({
+const EquipmentUtilizationChart = ({
   equipment,
 }: {
   equipment: Equipment[];
@@ -69,3 +69,4 @@ export const EquipmentUtilizationChart = ({
     </div>
   );
 };
+export default EquipmentUtilizationChart;

@@ -1,7 +1,7 @@
 "use client";
+import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { CHART_COLORS } from "../../utils/constants";
-import React from "react";
 
 const data = [
   { name: "Wheat", value: 35 },
@@ -11,7 +11,7 @@ const data = [
   { name: "Oats", value: 5 },
 ];
 
-export const CropDistributionChart = () => {
+const CropDistributionChart = () => {
   return (
     <div className="bg-gray-50 p-4 rounded-lg">
       <h3 className="font-semibold mb-4">Crop Distribution</h3>
@@ -42,3 +42,4 @@ export const CropDistributionChart = () => {
     </div>
   );
 };
+export default CropDistributionChart;

@@ -1,10 +1,10 @@
 "use client";
 import { Bell } from "lucide-react";
-import { useFarmDataContext } from "../../../contexts/FarmDataContext";
+import { useFarmDataContext } from "@/contexts/FarmDataContext";
 import { useState } from "react";
 import React from "react";
 
-export const NotificationDropdown = () => {
+const NotificationDropdown = () => {
   const { alerts, unreadAlerts, markAllAlertsAsRead, markAlertAsRead } =
     useFarmDataContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -64,3 +64,4 @@ export const NotificationDropdown = () => {
     </div>
   );
 };
+export default NotificationDropdown;

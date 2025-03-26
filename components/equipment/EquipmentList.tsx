@@ -1,10 +1,10 @@
 "use client";
 import { Plus } from "lucide-react";
-import { EquipmentCard } from "./EquipmentCard";
+import EquipmentCard from "./EquipmentCard";
 import type { Equipment } from "../../utils/types";
 import React from "react";
 
-export const EquipmentList = ({
+const EquipmentList = ({
   equipment,
   onStatusChange,
 }: {
@@ -36,3 +36,4 @@ export const EquipmentList = ({
     </div>
   );
 };
+export default EquipmentList;

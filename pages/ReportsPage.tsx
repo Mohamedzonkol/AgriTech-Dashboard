@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import { ProductionSummary } from "../components/reports/ProductionSummary";
+import ProductionSummary from "../components/reports/ProductionSummary";
 import { ClipboardList, Database } from "lucide-react";
-import { CostAnalysisChart } from "@/components/reports/CostAnalysisChart";
-import { MonthlyProductionChart } from "@/components/reports/MonthlyProductionChart";
-import { ResourceUsage } from "@/components/reports/ResourceUsage";
+import CostAnalysisChart from "@/components/reports/CostAnalysisChart";
+import MonthlyProductionChart from "@/components/reports/MonthlyProductionChart";
+import ResourceUsage from "@/components/reports/ResourceUsage";
 
-export const ReportsPage = () => {
+const ReportsPage = () => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex justify-between items-center mb-6">
@@ -35,3 +35,4 @@ export const ReportsPage = () => {
     </div>
   );
 };
+export default ReportsPage;

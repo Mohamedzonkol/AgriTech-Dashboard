@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
-import { EquipmentList } from "../components/equipment/EquipmentList";
-import { EquipmentUtilizationChart } from "../components/equipment/EquipmentUtilizationChart";
+import EquipmentList from "../components/equipment/EquipmentList";
+import EquipmentUtilizationChart from "../components/equipment/EquipmentUtilizationChart";
 import type { Equipment } from "../utils/types";
 import React from "react";
 import { Settings } from "lucide-react";
 
-export const EquipmentPage = () => {
+const EquipmentPage = () => {
   // Initial mock data for equipment
   const [equipment, setEquipment] = useState<Equipment[]>([
     {
@@ -131,3 +131,4 @@ export const EquipmentPage = () => {
     </div>
   );
 };
+export default EquipmentPage;

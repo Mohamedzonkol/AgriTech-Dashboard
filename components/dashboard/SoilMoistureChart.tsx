@@ -13,7 +13,7 @@ import { CHART_COLORS } from "../../utils/constants";
 import type { SoilMoistureData } from "../../utils/types";
 import React from "react";
 
-export const SoilMoistureChart = ({ data }: { data: SoilMoistureData[] }) => {
+const SoilMoistureChart = ({ data }: { data: SoilMoistureData[] }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-2">
       <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -72,3 +72,4 @@ export const SoilMoistureChart = ({ data }: { data: SoilMoistureData[] }) => {
     </div>
   );
 };
+export default SoilMoistureChart;

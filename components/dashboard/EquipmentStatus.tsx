@@ -5,7 +5,7 @@ import type { Equipment } from "../../utils/types";
 import React from "react";
 import { useFarmDataContext } from "@/contexts/FarmDataContext";
 
-export const EquipmentStatus = ({ equipment }: { equipment: Equipment[] }) => {
+const EquipmentStatus = ({ equipment }: { equipment: Equipment[] }) => {
   const { updateEquipmentStatus } = useFarmDataContext();
 
   return (
@@ -62,3 +62,4 @@ export const EquipmentStatus = ({ equipment }: { equipment: Equipment[] }) => {
     </div>
   );
 };
+export default EquipmentStatus;

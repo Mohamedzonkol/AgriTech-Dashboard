@@ -14,9 +14,9 @@ import { CHART_COLORS } from "../../utils/constants";
 import type { CropYieldData } from "../../utils/types";
 import React from "react";
 
-export const YieldChart = ({ data }: { data: CropYieldData[] }) => {
+const YieldChart = ({ data }: { data: CropYieldData[] }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-2">
+    <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-3">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">
           Crop Yield Progression (2023)
@@ -78,3 +78,4 @@ export const YieldChart = ({ data }: { data: CropYieldData[] }) => {
     </div>
   );
 };
+export default YieldChart;

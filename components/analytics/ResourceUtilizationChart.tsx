@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-export const ResourceUtilization = () => {
+const ResourceUtilization = () => {
   return (
     <div className="bg-gray-50 p-4 rounded-lg">
       <h3 className="font-semibold mb-4">Resource Utilization</h3>
@@ -42,3 +42,4 @@ export const ResourceUtilization = () => {
     </div>
   );
 };
+export default ResourceUtilization;

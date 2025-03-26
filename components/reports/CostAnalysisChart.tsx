@@ -21,7 +21,7 @@ const data = [
   { category: "Water", cost: 4500, budget: 5000 },
 ];
 
-export const CostAnalysisChart = () => {
+ const CostAnalysisChart = () => {
   return (
     <div>
       <h3 className="font-semibold mb-4">Cost Analysis</h3>
@@ -46,3 +46,4 @@ export const CostAnalysisChart = () => {
     </div>
   );
 };
+export default CostAnalysisChart;

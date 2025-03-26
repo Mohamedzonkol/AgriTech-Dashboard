@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-import { FieldCard } from "./FieldCard";
+import FieldCard from "./FieldCard";
 import { Plus } from "lucide-react";
 import type { Field } from "../../utils/types";
 import React from "react";
 
-export const FieldList = ({
+const FieldList = ({
   fields,
   onUpdateFields,
 }: {
@@ -94,3 +94,4 @@ export const FieldList = ({
     </div>
   );
 };
+export default FieldList;

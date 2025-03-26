@@ -1,9 +1,8 @@
-"use client";
 import { Tractor } from "lucide-react";
 import type { FarmStatus } from "../../utils/types";
 import React from "react";
 
-export const FarmStatusCard = ({ status }: { status: FarmStatus }) => {
+const FarmStatusCard = ({ status }: { status: FarmStatus }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex justify-between items-center mb-4">
@@ -52,3 +51,4 @@ export const FarmStatusCard = ({ status }: { status: FarmStatus }) => {
     </div>
   );
 };
+export default FarmStatusCard;

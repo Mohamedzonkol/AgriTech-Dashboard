@@ -1,4 +1,3 @@
-"use client";
 export interface WeatherData {
   temperature: number;
   humidity: number;

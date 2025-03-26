@@ -5,7 +5,7 @@ import type { Alert } from "../../utils/types";
 import { useFarmDataContext } from "@/contexts/FarmDataContext";
 import React from "react";
 
-export const AlertCard = ({
+const AlertCard = ({
   alerts,
   unreadCount,
 }: {
@@ -52,3 +52,4 @@ export const AlertCard = ({
     </div>
   );
 };
+export default AlertCard;

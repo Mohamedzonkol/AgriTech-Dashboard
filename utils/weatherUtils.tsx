@@ -67,7 +67,7 @@ export const generateInitialWeather = () => ({
   humidity: 65,
   windSpeed: 12,
   condition: "Partly Cloudy",
-  location: "Greenville Farm",
+  location: "Argi Farm",
   lastUpdated: new Date().toLocaleTimeString(),
   uvIndex: Math.floor(Math.random() * 10) + 1,
   pressure: Math.floor(Math.random() * 60) + 980,

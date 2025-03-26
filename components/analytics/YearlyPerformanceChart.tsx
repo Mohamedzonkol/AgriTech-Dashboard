@@ -26,7 +26,7 @@ const data = [
   { month: "Dec", yield: 50, rainfall: 40, temp: 13 },
 ];
 
-export const YearlyPerformanceChart = () => {
+const YearlyPerformanceChart = () => {
   return (
     <div className="bg-gray-50 p-4 rounded-lg mb-8">
       <h3 className="font-semibold mb-4">Yearly Performance</h3>
@@ -66,3 +66,4 @@ export const YearlyPerformanceChart = () => {
     </div>
   );
 };
+export default YearlyPerformanceChart;

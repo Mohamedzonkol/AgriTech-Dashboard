@@ -50,7 +50,7 @@ const data = [
   },
 ];
 
-export const FieldHealthAnalysis = () => {
+const FieldHealthAnalysis = () => {
   return (
     <div className="bg-gray-50 p-4 rounded-lg">
       <h3 className="font-semibold mb-4">Field Health Analysis</h3>
@@ -80,3 +80,4 @@ export const FieldHealthAnalysis = () => {
     </div>
   );
 };
+export default FieldHealthAnalysis;

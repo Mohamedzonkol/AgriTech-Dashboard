@@ -13,7 +13,7 @@ import { CHART_COLORS } from "../../utils/constants";
 import type { Field } from "../../utils/types";
 import React from "react";
 
-export const FieldActivityChart = ({ fields }: { fields: Field[] }) => {
+const FieldActivityChart = ({ fields }: { fields: Field[] }) => {
   const data = fields.map((field) => ({
     name: field.name,
     size: field.size,
@@ -51,3 +51,4 @@ export const FieldActivityChart = ({ fields }: { fields: Field[] }) => {
     </div>
   );
 };
+export default FieldActivityChart;

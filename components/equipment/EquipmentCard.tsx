@@ -4,7 +4,7 @@ import { EQUIPMENT_STATUS_STYLES } from "../../utils/constants";
 import type { Equipment } from "../../utils/types";
 import React from "react";
 
-export const EquipmentCard = ({
+const EquipmentCard = ({
   equipment,
   onStatusChange,
 }: {
@@ -79,3 +79,4 @@ export const EquipmentCard = ({
     </div>
   );
 };
+export default EquipmentCard;

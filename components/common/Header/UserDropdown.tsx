@@ -3,7 +3,7 @@ import { ChevronDown, User, Settings, LogOut } from "lucide-react";
 import { useAuth } from "../../../contexts/AuthContext";
 import React, { useState } from "react";
 
-export const UserDropdown = () => {
+const UserDropdown = () => {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -46,3 +46,4 @@ export const UserDropdown = () => {
     </div>
   );
 };
+export default UserDropdown;

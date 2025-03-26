@@ -27,7 +27,7 @@ const data = [
   { month: "Dec", wheat: 50, corn: 35, soy: 25 },
 ];
 
-export const MonthlyProductionChart = () => {
+const MonthlyProductionChart = () => {
   return (
     <div>
       <h3 className="font-semibold mb-4">Monthly Production</h3>
@@ -63,3 +63,4 @@ export const MonthlyProductionChart = () => {
     </div>
   );
 };
+export default MonthlyProductionChart;

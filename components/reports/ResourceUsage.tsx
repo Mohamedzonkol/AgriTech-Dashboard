@@ -10,7 +10,7 @@ const data = [
   { name: "Labor", value: 20 },
 ];
 
-export const ResourceUsage = () => {
+const ResourceUsage = () => {
   return (
     <div className="border rounded-xl p-4">
       <h3 className="font-semibold mb-4">Resource Usage</h3>
@@ -53,3 +53,4 @@ export const ResourceUsage = () => {
     </div>
   );
 };
+export default ResourceUsage;

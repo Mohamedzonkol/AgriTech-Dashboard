@@ -4,11 +4,7 @@ import { FarmStatus } from "@/utils";
 import { Zap } from "lucide-react";
 import React from "react";
 
-export const EnergyMonitoringCard = ({
-  generation,
-}: {
-  generation: number;
-}) => {
+const EnergyMonitoringCard = ({ generation }: { generation: number }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 col-span-1">
       <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -46,3 +42,4 @@ export const EnergyMonitoringCard = ({
     </div>
   );
 };
+export default EnergyMonitoringCard;

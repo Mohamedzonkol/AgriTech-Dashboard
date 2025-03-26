@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { CropDistributionChart } from "../components/analytics/CropDistributionChart";
-import { FieldHealthAnalysis } from "../components/analytics/FieldHealthAnalysis";
-import { ResourceUtilization } from "../components/analytics/ResourceUtilizationChart";
-import { YearlyPerformanceChart } from "../components/analytics/YearlyPerformanceChart";
+import CropDistributionChart from "../components/analytics/CropDistributionChart";
+import FieldHealthAnalysis from "../components/analytics/FieldHealthAnalysis";
+import ResourceUtilization from "../components/analytics/ResourceUtilizationChart";
+import YearlyPerformanceChart from "../components/analytics/YearlyPerformanceChart";
 
-export const AnalyticsPage = () => {
+const AnalyticsPage = () => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Farm Analytics</h2>
@@ -22,3 +22,4 @@ export const AnalyticsPage = () => {
     </div>
   );
 };
+export default AnalyticsPage;

@@ -19,7 +19,7 @@ const data = [
   { name: "Barley", yield: 38, target: 40 },
 ];
 
-export const ProductionSummary = () => {
+const ProductionSummary = () => {
   return (
     <div className="border rounded-xl p-4">
       <h3 className="font-semibold mb-4">Production Summary</h3>
@@ -54,3 +54,4 @@ export const ProductionSummary = () => {
     </div>
   );
 };
+export default ProductionSummary;

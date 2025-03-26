@@ -1,4 +1,3 @@
-"use client";
 import {
   AlertTriangle,
   BarChart2,
@@ -10,7 +9,7 @@ import React from "react";
 
 // Add this at the top
 
-export const QuickActions = () => {
+const QuickActions = () => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 col-span-1">
       <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
@@ -39,3 +38,4 @@ export const QuickActions = () => {
     </div>
   );
 };
+export default QuickActions;

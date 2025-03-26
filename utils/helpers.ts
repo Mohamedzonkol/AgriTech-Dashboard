@@ -1,4 +1,3 @@
-"use client";
 import { Alert } from "./types";
 
 // Format date to readable string

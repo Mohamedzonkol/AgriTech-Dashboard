@@ -3,7 +3,7 @@ import React from "react";
 import { FIELD_STATUS_STYLES } from "../../utils/constants";
 import type { Field } from "../../utils/types";
 
-export const FieldCard = ({
+const FieldCard = ({
   field,
   onEdit,
   onDelete,
@@ -58,3 +58,4 @@ export const FieldCard = ({
     </div>
   );
 };
+export default FieldCard;
