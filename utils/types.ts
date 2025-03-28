@@ -16,6 +16,10 @@ export interface WeatherForecast {
   low: number;
   precipitation: number;
   wind: number;
+  day: string;
+  humidity: number;
+  pressure: number;
+  icon: string;
 }
 
 // Farm status types

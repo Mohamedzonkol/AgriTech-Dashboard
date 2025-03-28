@@ -35,4 +35,5 @@ export const FIELD_STATUS_STYLES = {
   Harvested: "bg-blue-100 text-blue-800",
   Planted: "bg-yellow-100 text-yellow-800",
   Fallow: "bg-gray-100 text-gray-800",
+  default: "bg-gray-100 text-gray-800",
 };

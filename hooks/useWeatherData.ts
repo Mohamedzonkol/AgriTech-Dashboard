@@ -1,43 +1,84 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  generateWeatherForecast,
-  generateInitialWeather,
-} from "../utils/weatherUtils";
+import { fetchCurrentWeather, fetchWeatherForecast } from "../utils/api/weatherService";
 import type { WeatherData, WeatherForecast } from "../utils/types";
 
-export const useWeatherData = () => {
-  const [currentWeather, setCurrentWeather] = useState<WeatherData>(
-    generateInitialWeather()
-  );
-  const [weatherForecast, setWeatherForecast] = useState<WeatherForecast[]>(
-    generateWeatherForecast()
-  );
+interface WeatherHookResult {
+  currentWeather: WeatherData | null;
+  weatherForecast: WeatherForecast[];
+  loading: {
+    current: boolean;
+    forecast: boolean;
+  };
+  error: {
+    current: string | null;
+    forecast: string | null;
+  };
+  refresh: () => Promise<void>;
+}
+
+export const useWeatherData = (city: string = "Cairo"): WeatherHookResult => {
+  const [data, setData] = useState<{
+    current: WeatherData | null;
+    forecast: WeatherForecast[];
+  }>({ 
+    current: null, 
+    forecast: [] 
+  });
+  
+  const [loading, setLoading] = useState({
+    current: true,
+    forecast: true
+  });
+  
+  const [error, setError] = useState({
+    current: null as string | null,
+    forecast: null as string | null
+  });
+
+  const fetchData = async () => {
+    try {
+      setLoading({ current: true, forecast: true });
+      setError({ current: null, forecast: null });
+
+      const [current, forecast] = await Promise.allSettled([
+        fetchCurrentWeather(city),
+        fetchWeatherForecast(city)
+      ]);
+
+      if (current.status === "fulfilled") {
+        setData(prev => ({ ...prev, current: current.value }));
+      } else {
+        setError(prev => ({ ...prev, current: current.reason.message }));
+      }
+
+      if (forecast.status === "fulfilled") {
+        const forecastData = Array.isArray(forecast.value) ? forecast.value : [forecast.value];
+        setData(prev => ({ ...prev, forecast: forecastData }));
+      } else {
+        setError(prev => ({ ...prev, forecast: forecast.reason.message }));
+      }
+    } catch (err) {
+      setError({ current: "Unexpected error", forecast: "Unexpected error" });
+    } finally {
+      setLoading({ current: false, forecast: false });
+    }
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWeather((prev) => ({
-        ...prev,
-        temperature: prev.temperature + (Math.random() > 0.5 ? 1 : -1),
-        humidity: Math.max(
-          30,
-          Math.min(90, prev.humidity + (Math.random() > 0.5 ? 2 : -2))
-        ),
-        windSpeed: Math.max(
-          5,
-          Math.min(30, prev.windSpeed + (Math.random() > 0.5 ? 1 : -1))
-        ),
-        lastUpdated: new Date().toLocaleTimeString(),
-      }));
+    fetchData();
+  }, [city]);
 
-      // Update forecast every hour (simulated)
-      if (Math.random() > 0.95) {
-        setWeatherForecast(generateWeatherForecast());
-      }
-    }, 5000);
-
+  useEffect(() => {
+    const interval = setInterval(fetchData, 300000);
     return () => clearInterval(interval);
-  }, []);
+  }, [city]);
 
-  return { currentWeather, weatherForecast };
+  return {
+    currentWeather: data.current,
+    weatherForecast: data.forecast,
+    loading,
+    error,
+    refresh: fetchData
+  };
 };

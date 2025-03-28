@@ -31,8 +31,8 @@ const FieldManagementContent = () => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Field Management</h2>
-        <button
+        {/* <h2 className="text-2xl font-bold text-gray-800">Field Management</h2> */}
+        {/* <button
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
           onClick={() => {
             // Add field creation logic
@@ -40,11 +40,11 @@ const FieldManagementContent = () => {
         >
           <Plus size={18} />
           Add Field
-        </button>
+        </button> */}
       </div>
-      <FieldList fields={fieldData} onUpdateFields={setFieldData} />
+      <FieldList />
       <div className="bg-gray-50 p-4 rounded-lg mt-6">
-        <FieldActivityChart fields={fieldData} />
+        <FieldActivityChart />
       </div>
     </div>
   );

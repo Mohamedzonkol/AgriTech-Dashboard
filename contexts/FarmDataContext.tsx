@@ -28,7 +28,7 @@ type FarmDataContextType = {
   alerts: Alert[];
   fieldData: Field[];
   equipmentData: Equipment[];
-  currentWeather: WeatherData;
+  currentWeather: WeatherData | null;
   weatherForecast: WeatherForecast[];
   farmStatus: FarmStatus;
   unreadAlerts: number;
