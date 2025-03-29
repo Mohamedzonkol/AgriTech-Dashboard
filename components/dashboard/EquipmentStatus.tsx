@@ -1,34 +1,32 @@
 "use client";
-import { Plus, Wifi, WifiOff, Battery } from "lucide-react";
+import { Plus, Wifi, WifiOff, Battery, Link } from "lucide-react";
 import { EQUIPMENT_STATUS_STYLES } from "../../utils/constants";
 import type { Equipment } from "../../utils/types";
 import React from "react";
-import { useFarmDataContext } from "@/contexts/FarmDataContext";
+import { ViewEquipmentButton } from "./viewEquipmentButtom";
 
 const EquipmentStatus = ({ equipment }: { equipment: Equipment[] }) => {
-  const { updateEquipmentStatus } = useFarmDataContext();
+  // const { updateEquipmentStatus } = useFarmDataContext();
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 col-span-1">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">Equipment Status</h2>
-        <button className="text-xs bg-gray-100 px-2 py-1 rounded flex items-center">
-          <Plus className="w-3 h-3 mr-1" /> Add
-        </button>
-      </div>
-      <div className="space-y-3">
+        <ViewEquipmentButton className="ml-auto" />
+        </div>
+      <div className=" space-y-3 ">
         {equipment.map((equip) => (
-          <div key={equip.id} className="border rounded-lg p-3">
-            <div className="flex justify-between">
-              <span className="font-medium">{equip.name}</span>
+          <div key={equip.id} className="border rounded-lg p-3 transition-transform hover:scale-105 duration-300">
+            <div className="flex justify-between transition-transform hover:scale-105 duration-300">
+              <span className="font-larger font-bold">{equip.name}</span>
               <span
-                className={`text-sm ${EQUIPMENT_STATUS_STYLES[equip.status]}`}
+                className={`text-sm font-bold ${EQUIPMENT_STATUS_STYLES[equip.status]}`}
               >
                 {equip.status}
               </span>
             </div>
-            <div className="flex justify-between text-sm text-gray-500 mt-1">
-              <span>ID: {equip.id}</span>
+            <div className="flex justify-between text-sm text-gray-500 mt-1  ">
+              <span >ID: {equip.id}</span>
               <span>{equip.hoursUsed} hrs</span>
             </div>
             <div className="flex justify-between items-center mt-2">

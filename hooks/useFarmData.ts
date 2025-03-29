@@ -1,6 +1,6 @@
 "use client";
 import { faker } from "@faker-js/faker";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   generateCropYieldData,
   generateSoilMoistureData,
@@ -16,6 +16,8 @@ import type {
 } from "../utils/types";
 
 export const useFarmData = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
   const [farmStatus, setFarmStatus] = useState<FarmStatus>({
     activeMachines: 3,
     cropHealth: "Good",
@@ -24,6 +26,7 @@ export const useFarmData = () => {
     pestRisk: "Low",
     waterReservoir: faker.number.int({ min: 30, max: 100 }),
     solarGeneration: faker.number.int({ min: 50, max: 200 }),
+ 
   });
   const [cropYieldData, setCropYieldData] = useState<CropYieldData[]>(
     generateCropYieldData()
@@ -36,6 +39,27 @@ export const useFarmData = () => {
   const [unreadAlerts, setUnreadAlerts] = useState(
     alerts.filter((alert) => !alert.read).length
   );
+
+  const refreshFarmData = useCallback(async () => {
+    setLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setCropYieldData(generateCropYieldData());
+      setSoilMoistureData(generateSoilMoistureData());
+      setFieldData(generateFieldData());
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to refresh farm data'));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Update unread alerts whenever alerts change
+  useEffect(() => {
+    setUnreadAlerts(alerts.filter((alert) => !alert.read).length);
+  }, [alerts]);
 
   // Simulate real-time data updates
   useEffect(() => {
@@ -61,8 +85,8 @@ export const useFarmData = () => {
           "Equipment",
           "Weather",
           "Soil",
-        ];
-        const newAlert = {
+        ] as const;
+        const newAlert: Alert = {
           id: crypto.randomUUID(),
           type: newAlertTypes[Math.floor(Math.random() * newAlertTypes.length)],
           message: `New alert detected in Field ${String.fromCharCode(
@@ -76,28 +100,27 @@ export const useFarmData = () => {
           read: false,
         };
         setAlerts((prev) => [newAlert, ...prev]);
-        setUnreadAlerts((prev) => prev + 1);
       }
     }, 5000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const markAlertAsRead = (alertId: string) => {
+  const markAlertAsRead = useCallback((alertId: string) => {
     setAlerts((prev) =>
       prev.map((alert) =>
         alert.id === alertId ? { ...alert, read: true } : alert
       )
     );
-    setUnreadAlerts((prev) => prev - 1);
-  };
+  }, []);
 
-  const markAllAlertsAsRead = () => {
+  const markAllAlertsAsRead = useCallback(() => {
     setAlerts((prev) => prev.map((alert) => ({ ...alert, read: true })));
-    setUnreadAlerts(0);
-  };
+  }, []);
 
   return {
+    loading,
+    error,
     farmStatus,
     cropYieldData,
     soilMoistureData,
@@ -107,5 +130,6 @@ export const useFarmData = () => {
     markAlertAsRead,
     markAllAlertsAsRead,
     setFieldData,
+    refreshFarmData,
   };
 };

@@ -55,7 +55,7 @@ const WeatherForecast = ({ forecast, error, loading, className = "" }: WeatherFo
       
       <div className="space-y-4">
         {forecast.map((day) => (
-          <div key={day.date} className="flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:shadow-md transition-shadow">
+          <div key={day.date} className="flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:shadow-md transition-shadow transition-transform hover:scale-105 duration-300">
             <span className="font-medium text-gray-700 dark:text-gray-300">
               {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
             </span>
@@ -85,20 +85,20 @@ const WeatherForecast = ({ forecast, error, loading, className = "" }: WeatherFo
       </div>
       
       {/* Summary Stats */}
-      <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300">
-          <Thermometer className="w-5 h-5" />
+      <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm ">
+        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300 transition-transform hover:scale-105 duration-100 ">
+          <Thermometer className="w-5 h-5 " />
           <span>Avg: {avgTemp}°C</span>
         </div>
-        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300">
+        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300 transition-transform hover:scale-105 duration-100">
           <Droplet className="w-5 h-5" />
           <span>Rain: {totalRain.toFixed(1)}mm</span>
         </div>
-        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300">
+        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300 transition-transform hover:scale-105 duration-100">
           <Wind className="w-5 h-5  " />
           <span>Wind: {avgWind}km/h</span>
         </div>
-        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300">
+        <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-300 transition-transform hover:scale-105 duration-100">
           <Gauge className="w-5 h-5" />
           <span>Humidity: {avgHumidity}%</span>
         </div>

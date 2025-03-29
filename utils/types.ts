@@ -31,6 +31,7 @@ export interface FarmStatus {
   pestRisk: string;
   waterReservoir: number;
   solarGeneration: number;
+
 }
 
 // Alert types
@@ -47,11 +48,12 @@ export interface Alert {
 export interface Equipment {
   id: string;
   name: string;
-  status: "Active" | "Maintenance" | "Idle";
+  status: "Active" | "Maintenance" | "Idle" | "Error";
   lastMaintenance: string;
   hoursUsed: number;
   battery: number;
   connectivity: "Online" | "Offline";
+  
 }
 
 // Field types
@@ -63,7 +65,7 @@ export interface Field {
   plantingDate: string;
   harvestDate: string;
   irrigation: string;
-  status: "Growing" | "Harvested" | "Planted" | "Fallow";
+  status: "Growing" | "Harvested" | "Planted" | "Fallow"| "Preparing";
 }
 
 // Chart data types

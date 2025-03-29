@@ -15,8 +15,8 @@ const AlertCard = ({
   const { markAlertAsRead } = useFarmDataContext();
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="flex justify-between items-center mb-4">
+<div className="bg-white rounded-xl shadow-lg p-6" aria-hidden="true">
+<div className="flex justify-between items-center mb-4 " >
         <h2 className="text-xl font-bold text-gray-800">Alerts</h2>
         <div className="flex items-center">
           <AlertTriangle className="text-red-500" />

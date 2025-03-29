@@ -72,7 +72,6 @@ export const updateFieldAPI = async (updatedField: Field) => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  // Check if the response contains JSON (some APIs return empty responses on success)
   const contentType = response.headers.get("Content-Type") || "";
   if (contentType.includes("application/json")) {
     return response.json();

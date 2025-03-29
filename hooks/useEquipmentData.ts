@@ -1,68 +1,103 @@
 "use client";
-import { faker } from "@faker-js/faker";
-import { useState, useEffect } from "react";
-import type { Equipment } from "../utils/types";
-
-// Generate mock equipment data
-export const generateEquipmentData = (): Equipment[] => {
-  const statuses: Equipment["status"][] = ["Active", "Maintenance", "Idle"];
-  return Array.from({ length: 5 }, (_, i) => ({
-    id: `EQ-${1000 + i}`,
-    name: ["Tractor", "Harvester", "Irrigator", "Seeder", "Sprayer"][i],
-    status: statuses[Math.floor(Math.random() * statuses.length)],
-    lastMaintenance: faker.date
-      .recent({ days: 30 })
-      .toISOString()
-      .split("T")[0],
-    hoursUsed: faker.number.int({ min: 50, max: 500 }),
-    battery: faker.number.int({ min: 15, max: 100 }),
-    connectivity: faker.datatype.boolean() ? "Online" : "Offline",
-  }));
-};
+import { useState, useEffect, useCallback } from "react";
+import { Equipment } from "../utils/types";
+import { 
+  fetchEquipmentsAPI, 
+  addEquipmentAPI, 
+  updateEquipmentAPI, 
+  deleteEquipmentAPI, 
+  updateEquipmentStatusAPI 
+} from "../utils/api/EquipmentService";
 
 export const useEquipmentData = () => {
-  const [equipmentData, setEquipmentData] = useState<Equipment[]>(
-    generateEquipmentData()
-  );
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEquipmentData((prev) => {
-        const newData = [...prev];
-        const randomIndex = Math.floor(Math.random() * newData.length);
-
-        // Simulate battery drain or charge
-        newData[randomIndex].battery = Math.max(
-          0,
-          Math.min(
-            100,
-            newData[randomIndex].battery + (Math.random() > 0.5 ? -2 : 5)
-          )
-        );
-
-        // Randomly change connectivity
-        if (Math.random() > 0.8) {
-          newData[randomIndex].connectivity =
-            newData[randomIndex].connectivity === "Online"
-              ? "Offline"
-              : "Online";
-        }
-
-        return newData;
-      });
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const updateEquipmentStatus = (
-    id: string,
-    status: "Active" | "Maintenance" | "Idle"
-  ) => {
-    setEquipmentData((prev) =>
-      prev.map((equip) => (equip.id === id ? { ...equip, status } : equip))
-    );
+  const handleError = (err: unknown, defaultMessage: string) => {
+    const message = err instanceof Error ? err.message : defaultMessage;
+    setError(message);
+    console.error(message, err);
+    return Promise.reject(err);
   };
 
-  return { equipmentData, updateEquipmentStatus };
+  const fetchEquipments = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchEquipmentsAPI();
+      setEquipments(data);
+    } catch (err) {
+      handleError(err, "Failed to fetch equipments");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEquipments();
+  }, [fetchEquipments]);
+
+  const addEquipment = useCallback(async (equipment: Equipment): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    try {
+      await addEquipmentAPI(equipment);
+      await fetchEquipments();
+    } catch (err) {
+      handleError(err, "Failed to add equipment");
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchEquipments]);
+
+  const updateEquipment = useCallback(async (equipment: Equipment): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    try {
+      await updateEquipmentAPI(equipment);
+      await fetchEquipments();
+    } catch (err) {
+      handleError(err, "Failed to update equipment");
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchEquipments]);
+
+  const deleteEquipment = useCallback(async (id: string): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    try {
+      await deleteEquipmentAPI(id);
+      await fetchEquipments();
+    } catch (err) {
+      handleError(err, "Failed to delete equipment");
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchEquipments]);
+
+  const updateEquipmentStatus = useCallback(async (id: string, status: "Active" | "Maintenance" | "Idle" | "Error"): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    try {
+      await updateEquipmentStatusAPI(id, status);
+      await fetchEquipments();
+    } catch (err) {
+      handleError(err, "Failed to update equipment status");
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchEquipments]);
+
+  return {
+    equipments,
+    loading,
+    error,
+    addEquipment,
+    updateEquipment,
+    deleteEquipment,
+    updateEquipmentStatus,
+    refetch: fetchEquipments
+  };
 };

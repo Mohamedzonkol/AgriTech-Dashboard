@@ -7,12 +7,14 @@ import React from "react";
 const EquipmentCard = ({
   equipment,
   onStatusChange,
+  onDetailsClick, 
 }: {
   equipment: Equipment;
   onStatusChange: (
     id: string,
-    status: "Active" | "Maintenance" | "Idle"
+    status: "Active" | "Maintenance" | "Idle" | "Error"
   ) => void;
+  onDetailsClick: (id: string) => void; 
 }) => {
   return (
     <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
@@ -62,7 +64,10 @@ const EquipmentCard = ({
         </div>
       </div>
       <div className="bg-gray-50 px-4 py-3 border-t flex justify-between">
-        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+        <button 
+          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+          onClick={() => onDetailsClick(equipment.id)} // Add onClick handler
+        >
           <Settings className="w-4 h-4 inline mr-1" />
           Details
         </button>
@@ -74,6 +79,7 @@ const EquipmentCard = ({
           <option value="Active">Active</option>
           <option value="Maintenance">Maintenance</option>
           <option value="Idle">Idle</option>
+          <option value="Error">Error</option>
         </select>
       </div>
     </div>
