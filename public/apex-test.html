@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farm IoT Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/loaders/GLTFLoader.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f4f9;
+        padding: 20px;
+        color: #333;
+        transition: background 0.3s, color 0.3s;
+        overflow: auto;
+      }
+      #opening-scene {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        background: #fff;
+        background-color: #fff;
+        transition: opacity 1s;
+      }
+      #dashboard {
+        display: none;
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background: #f4f4f9;
+        color: #333;
+        flex-direction: column;
+        align-items: center;
+        max-width: 1200px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        transition: background 0.3s, color 0.3s;
+      }
+      .dark-mode #dashboard {
+        background: #1e272e;
+        color: #d2dae2;
+      }
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2.5rem;
+      }
+      .dashboard {
+        display: none;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 100%;
+      }
+      .chart-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        transition: background 0.3s, box-shadow 0.3s;
+      }
+      h2 {
+        margin-top: 0;
+        font-size: 1.5em;
+        color: #2c3e50;
+      }
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .controls button {
+        padding: 10px 20px;
+        background: #3498db;
+
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .controls button:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+      }
+
+      .controls button i {
+        font-size: 1.2rem;
+      }
+      button {
+        padding: 10px 20px;
+        background: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: #2980b9;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+      }
+
+      .footer a {
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+      /* Notification System */
+      .notification-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 300px;
+      }
+
+      .notification {
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateX(100%);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .notification.show {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      .notification.hide {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      .notification.alert {
+        background: #e74c3c;
+        border-left: 5px solid #c0392b;
+      }
+
+      .notification.warning {
+        background: #f39c12;
+        border-left: 5px solid #d35400;
+      }
+
+      .notification-icon {
+        margin-right: 12px;
+        font-size: 20px;
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .notification-message {
+        font-size: 14px;
+      }
+
+      .notification-close {
+        margin-left: 10px;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+
+      .notification-close:hover {
+        opacity: 1;
+      }
+
+      .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.5);
+        width: 100%;
+        transform: scaleX(1);
+        transform-origin: left;
+        animation: progress 3s linear forwards;
+      }
+      .dark-mode {
+        background: #1e272e;
+        color: #d2dae2;
+      }
+      .dark-mode .chart-container {
+        background: rgba(30, 39, 46, 0.8);
+        color: #d2dae2;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+      .dark-mode .chart-container h2 {
+        color: #ecf0f1;
+      }
+      .dark-mode .footer {
+        color: #b0bec5;
+      }
+      .dark-mode button {
+        background: #808e9b;
+        color: #f1f2f6;
+      }
+      .dark-mode button:hover {
+        background: #576574;
+      }
+      @keyframes tractorMove {
+        0% {
+          left: 0;
+          opacity: 0;
+          transform: translateY(-50%) translateX(-50px) scale(0.9);
+        }
+        15% {
+          opacity: 1;
+          transform: translateY(-50%) translateX(0) scale(1);
+        }
+        85% {
+          left: calc(100% - 1.2em);
+          transform: translateY(-50%) translateX(0) scale(1);
+        }
+        90% {
+          left: calc(100% - 1.2em);
+          transform: translateY(-50%) translateX(10px) rotate(-5deg);
+        }
+        95% {
+          left: calc(100% - 1.2em);
+          transform: translateY(-50%) translateX(-5px) rotate(3deg);
+        }
+        100% {
+          left: calc(100% - 1.2em);
+          transform: translateY(-50%) translateX(0) rotate(0deg);
+          filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+        }
+      }
+
+      .loading-spinner {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes progress {
+        to {
+          transform: scaleX(0);
+        }
+      }
+      .dashboard-container {
+        animation: fadeIn 1s ease-in-out;
+      }
+      .dashboard-text {
+        position: relative;
+        display: inline-block;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1b4d3e; /* Deeper green for a more sophisticated tone */
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        transition: color 0.3s ease, transform 0.3s ease;
+      }
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+        animation: fadeIn 1s ease-out;
+      }
+
+      .crop-guard-logo {
+        max-width: 200px;
+        height: auto;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      }
+      /* Optional Hover Effect */
+      .dashboard-text:hover {
+        color: #ffcc00;
+        transform: scale(1.05);
+      }
+      .farm-f,
+      .dashboard-d {
+        position: relative;
+      }
+
+      #opening-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2.5rem;
+        color: white;
+        text-align: center;
+        z-index: 20;
+        opacity: 0;
+        animation: fadeIn 3s forwards;
+        white-space: nowrap;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .farm-icon {
+        font-size: 3.5rem;
+        color: #ffcc00;
+        position: absolute;
+        top: -1.5rem;
+        left: 0;
+        transform: translateY(-100%) scale(0.9);
+        opacity: 0;
+        animation: tractorMove 3s ease-out 0.2s forwards;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+      }
+
+      /* Optional Hover Effect */
+      .farm-icon:hover {
+        transform: translateY(-100%) scale(1.1);
+        color: #ffaa00;
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+      }
+
+      #three-container {
+        width: 100%;
+        height: 300px;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 1300px) {
+        #dashboard {
+          width: 95%;
+          max-width: 100%;
+          transform: none;
+          left: auto;
+          top: auto;
+          margin: 20px auto;
+        }
+      }
+
+      @media (max-width: 1100px) {
+        .dashboard {
+          grid-template-columns: repeat(2, minmax(300px, 1fr));
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .chart-container {
+          padding: 15px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
+
+        #dashboard {
+          width: 100%;
+          border-radius: 0;
+          max-height: none;
+          height: auto;
+        }
+
+        body {
+          padding: 0;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .controls button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        h2 {
+          font-size: 1.2em;
+        }
+
+        .chart-container {
+          padding: 10px;
+        }
+
+        .notification-container {
+          max-width: 100%;
+          right: 10px;
+          left: 10px;
+        }
+
+        .notification {
+          padding: 10px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Opening Scene -->
+    <div id="opening-scene">
+      <div id="opening-text">
+        <div class="farm-icon" id="tractor-icon">
+          <i class="fas fa-tractor"></i>
+        </div>
+        <span class="dashboard-text">
+          <span class="farm-f">W</span>elcome To Your Dashboar<span
+            class="dashboard-d"
+            >d</span
+          >
+        </span>
+        <div class="logo-container">
+          <img src="Logo.png" alt="Crop Guard Logo" class="crop-guard-logo" />
+        </div>
+      </div>
+    </div>
+
+    <!-- <div style="display: flex; align-items: center; padding: 20px">
+      <img
+        src="Logo2.png"
+        alt="CropGuard Logo"
+        style="height: 60px; margin-right: 15px"
+      />
+    </div> -->
+    <!-- <h1><i class="fas fa-microchip"></i> IoT Dashboard</h1> -->
+    <!-- Controls -->
+    <div class="controls">
+      <button id="startBtn"><i class="fas fa-play"></i> Start Updates</button>
+      <button id="stopBtn"><i class="fas fa-stop"></i> Stop Updates</button>
+      <button id="exportBtn">
+        <i class="fas fa-download"></i> Export Data
+      </button>
+      <button id="darkModeBtn">
+        <i class="fas fa-moon"></i> Toggle Dark Mode
+      </button>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner"></div>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+      <!-- Line Chart -->
+      <div class="chart-container">
+        <h2>Temperature & Humidity Over Time</h2>
+        <div id="lineChart"></div>
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="chart-container">
+        <h2>Average Data</h2>
+        <div id="barChart"></div>
+      </div>
+
+      <!-- Pie Chart -->
+      <div class="chart-container">
+        <h2>Data Distribution</h2>
+        <div id="pieChart"></div>
+      </div>
+
+      <!-- 3D Chart -->
+      <div class="chart-container">
+        <h2>3D Data Visualization</h2>
+        <div id="3dChart"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>
+        Developed by <a href="#" target="_blank">Mohamed Zonkol</a> | Powered by
+        ApexCharts & Plotly
+      </p>
+    </div>
+
+    <script>
+      // Three.js Opening Scene
+      let scene, camera, renderer;
+      let farmScene, farmCamera, farmRenderer;
+      let darkMode = false;
+      function initOpeningScene() {
+        // Scene setup
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x2e8b57); // Dark green farming color (SeaGreen)
+        // Camera setup
+        camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        camera.position.set(0, 0, 5);
+
+        // Renderer setup
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document
+          .getElementById("opening-scene")
+          .appendChild(renderer.domElement);
+
+        // Create particles for stars effect
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+          posArray[i] = (Math.random() - 0.5) * 10;
+        }
+
+        particlesGeometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(posArray, 3)
+        );
+
+        const particlesMaterial = new THREE.PointsMaterial({
+          size: 0.015,
+          color: 0x87ceeb,
+        });
+
+        const particlesMesh = new THREE.Points(
+          particlesGeometry,
+          particlesMaterial
+        );
+        scene.add(particlesMesh);
+
+        // Animation
+        function animate() {
+          requestAnimationFrame(animate);
+
+          particlesMesh.rotation.x += 0.005;
+          particlesMesh.rotation.y += 0.005;
+
+          renderer.render(scene, camera);
+        }
+        // Start the tractor animation after a short delay
+        setTimeout(() => {
+          const textElement = document.querySelector(".dashboard-text");
+          const fElement = document.querySelector(".farm-f");
+          const tractorIcon = document.getElementById("tractor-icon");
+
+          // Position tractor at F
+          const fRect = fElement.getBoundingClientRect();
+          const textRect = textElement.getBoundingClientRect();
+          const offsetLeft = fRect.left - textRect.left;
+
+          tractorIcon.style.left = `${offsetLeft}px`;
+          tractorIcon.style.opacity = "1";
+        }, 100);
+
+        animate();
+        // Hide the dashboard initially
+        // Resize Handling
+        window.addEventListener("resize", () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        // Transition to Dashboard After 5 Seconds
+        setTimeout(() => {
+          const openingScene = document.getElementById("opening-scene");
+          const dashboard = document.querySelector(".dashboard");
+
+          openingScene.style.transition = "opacity 1s";
+          dashboard.style.display = "grid";
+
+          openingScene.style.opacity = "0";
+          dashboard.style.transition = "opacity 1s";
+          dashboard.style.opacity = "0";
+          setTimeout(() => {
+            dashboard.style.opacity = "1";
+            openingScene.style.display = "none";
+          }, 100); // Fade-out duration
+        }, 4500);
+      }
+      document.addEventListener("DOMContentLoaded", () => initOpeningScene());
+
+      // Initialize Opening Scene
+      // Resize handling
+      window.addEventListener("resize", () => {
+        farmCamera.aspect =
+          document.getElementById("three-container").clientWidth /
+          document.getElementById("three-container").clientHeight;
+        farmCamera.updateProjectionMatrix();
+        farmRenderer.setSize(
+          document.getElementById("three-container").clientWidth,
+          document.getElementById("three-container").clientHeight
+        );
+      });
+
+      // Initialize data arrays
+      let temperatureData = [];
+      let humidityData = [];
+      let co2Data = [];
+      let pressureData = [];
+      let lightData = [];
+
+      // Initialize averages and counts arrays
+      let averages = [0, 0, 0, 0, 0];
+      let counts = [0, 0, 0, 0, 0];
+
+      // Line Chart Setup
+      const lineChartOptions = {
+        chart: {
+          type: "line",
+          height: 350,
+          animations: {
+            enabled: true,
+          },
+        },
+        series: [
+          {
+            name: "Temperature (°C)",
+            data: temperatureData,
+          },
+          {
+            name: "Humidity (%)",
+            data: humidityData,
+          },
+          {
+            name: "CO2 (ppm)",
+            data: co2Data,
+          },
+          {
+            name: "Pressure (hPa)",
+            data: pressureData,
+          },
+          {
+            name: "Light (lux)",
+            data: lightData,
+          },
+        ],
+        stroke: {
+          curve: "smooth",
+          width: 2,
+        },
+        colors: ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f1c40f"],
+        xaxis: {
+          type: "category",
+          labels: {
+            style: {
+              colors: "#666",
+            },
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              colors: "#666",
+            },
+            formatter: function (value) {
+              return value.toFixed(1); // Format y-axis labels to one decimal place
+            },
+          },
+        },
+        marker: {
+          show: true,
+        },
+        grid: {
+          borderColor: "#eee",
+        },
+        tooltip: {
+          enabled: true,
+          shared: true,
+          intersect: false,
+        },
+        legend: {
+          position: "bottom",
+          labels: {
+            colors: "#b0bec5", // Neutral gray-blue, visible in both modes
+          },
+        },
+      };
+
+      const lineChart = new ApexCharts(
+        document.querySelector("#lineChart"),
+        lineChartOptions
+      );
+      lineChart.render();
+
+      // Bar Chart Setup
+      const barChartOptions = {
+        chart: {
+          type: "bar",
+          height: 350,
+        },
+        series: [{ name: "Average Values", data: [0, 0, 0, 0, 0] }],
+        colors: ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f1c40f"],
+        xaxis: {
+          categories: ["Temperature", "Humidity", "CO2", "Pressure", "Light"],
+          labels: {
+            style: {
+              colors: "#666",
+            },
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              colors: "#666",
+            },
+            formatter: function (value) {
+              return value.toFixed(1); // Format y-axis labels to one decimal place
+            },
+            reversed: true,
+          },
+        },
+        grid: {
+          borderColor: "#eee",
+        },
+        tooltip: {
+          enabled: true,
+          shared: true,
+          intersect: false,
+        },
+        legend: {
+          position: "bottom",
+          labels: {
+            colors: "#b0bec5", // Neutral gray-blue, visible in both modes
+          },
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 2, // Rounded corners for bars
+            columnWidth: "70%",
+            distributed: true,
+          },
+        },
+      };
+      const barChart = new ApexCharts(
+        document.querySelector("#barChart"),
+        barChartOptions
+      );
+      barChart.render();
+
+      // Pie Chart Setup
+      const pieChartOptions = {
+        chart: {
+          type: "pie",
+          height: 350,
+        },
+        series: [],
+        labels: ["Temperature", "Humidity", "CO2", "Pressure", "Light"],
+        colors: ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f1c40f"],
+        tooltip: {
+          enabled: true,
+        },
+        legend: {
+          position: "bottom",
+          labels: {
+            colors: "#b0bec5", // Neutral gray-blue, visible in both modes
+          },
+        },
+      };
+
+      const pieChart = new ApexCharts(
+        document.querySelector("#pieChart"),
+        pieChartOptions
+      );
+      pieChart.render();
+
+      // 3D Chart Setup
+      const layout3D = {
+        margin: { l: 0, r: 0, b: 0, t: 0 },
+        scene: {
+          xaxis: { title: "Time" },
+          yaxis: { title: "Value" },
+          zaxis: { title: "Data Type" },
+        },
+      };
+
+      // Function to update average data
+      function updateAverages() {
+        const round = (value) => Math.round(value * 100) / 100;
+
+        const avgTemperature =
+          temperatureData.reduce((sum, point) => sum + point.y, 0) /
+            temperatureData.length || 0;
+        const avgHumidity =
+          humidityData.reduce((sum, point) => sum + point.y, 0) /
+            humidityData.length || 0;
+        const avgCO2 =
+          co2Data.reduce((sum, point) => sum + point.y, 0) / co2Data.length ||
+          0;
+        const avgPressure =
+          pressureData.reduce((sum, point) => sum + point.y, 0) /
+            pressureData.length || 0;
+        const avgLight =
+          lightData.reduce((sum, point) => sum + point.y, 0) /
+            lightData.length || 0;
+
+        // Update the bar chart with the correct data and rounded values
+        barChart.updateSeries([
+          {
+            name: "Average Values",
+            data: [
+              round(avgTemperature),
+              round(avgHumidity),
+              round(avgCO2),
+              round(avgPressure),
+              round(avgLight),
+            ],
+          },
+        ]);
+      }
+
+      // Function to add data to the charts
+      function addData(label, temperature, humidity, co2, pressure, light) {
+        // Add data to the line chart
+        temperatureData.push({ x: label, y: temperature });
+        humidityData.push({ x: label, y: humidity });
+        co2Data.push({ x: label, y: co2 });
+        pressureData.push({ x: label, y: pressure });
+        lightData.push({ x: label, y: light });
+        lineChart.updateSeries([
+          { name: "Temperature (°C)", data: temperatureData },
+          { name: "Humidity (%)", data: humidityData },
+          { name: "CO2 (ppm)", data: co2Data },
+          { name: "Pressure (hPa)", data: pressureData },
+          { name: "Light (lux)", data: lightData },
+        ]);
+
+        // Update averages
+        updateAverages();
+        checkThresholds(temperature, humidity, co2, pressure, light);
+        // Update the pie chart with the latest data
+        pieChart.updateSeries([temperature, humidity, co2, pressure, light]);
+
+        // Update the 3D chart
+        const data3D = [
+          {
+            type: "surface",
+            z: [
+              temperatureData.map((point) => point.y),
+              humidityData.map((point) => point.y),
+              co2Data.map((point) => point.y),
+              pressureData.map((point) => point.y),
+              lightData.map((point) => point.y),
+            ],
+            colorscale: "Viridis",
+          },
+        ];
+        Plotly.newPlot("3dChart", data3D, layout3D);
+
+        // Check for thresholds and show notifications
+        // Notification System
+        function showNotification(type, title, message, duration = 3000) {
+          const container = document.getElementById("notificationContainer");
+          const notification = document.createElement("div");
+
+          // Set notification type and content
+          notification.className = `notification ${type}`;
+          notification.innerHTML = `
+              <div class="notification-icon">
+                  ${
+                    type === "alert"
+                      ? '<i class="fas fa-exclamation-circle"></i>'
+                      : '<i class="fas fa-exclamation-triangle"></i>'
+                  }
+              </div>
+              <div class="notification-content">
+                  <div class="notification-title">${title}</div>
+                  <div class="notification-message">${message}</div>
+              </div>
+              <div class="notification-close">
+                  <i class="fas fa-times"></i>
+              </div>
+              <div class="notification-progress"></div>
+          `;
+
+          // Add to container
+          container.appendChild(notification);
+
+          // Trigger show animation
+          setTimeout(() => {
+            notification.classList.add("show");
+          }, 10);
+
+          // Close button functionality
+          const closeBtn = notification.querySelector(".notification-close");
+          closeBtn.addEventListener("click", () => {
+            closeNotification(notification);
+          });
+
+          // Auto-close after duration
+          if (duration > 0) {
+            setTimeout(() => {
+              closeNotification(notification);
+            }, duration);
+          }
+
+          return notification;
+        }
+
+        function closeNotification(notification) {
+          notification.classList.remove("show");
+          notification.classList.add("hide");
+
+          // Remove from DOM after animation completes
+          setTimeout(() => {
+            notification.remove();
+          }, 300);
+        }
+
+        // Threshold check with improved notifications
+        function checkThresholds(temperature, humidity, co2, pressure, light) {
+          // Clear previous notifications
+          document.getElementById("notificationContainer").innerHTML = "";
+
+          // Check each threshold
+          if (temperature > 30) {
+            showNotification(
+              "alert",
+              "High Temperature",
+              `Temperature is ${temperature}°C (Above 30°C threshold)`
+            );
+          } else if (temperature > 25) {
+            showNotification(
+              "warning",
+              "Elevated Temperature",
+              `Temperature is ${temperature}°C (Approaching threshold)`
+            );
+          }
+
+          if (humidity > 60) {
+            showNotification(
+              "alert",
+              "High Humidity",
+              `Humidity is ${humidity}% (Above 60% threshold)`
+            );
+          } else if (humidity > 50) {
+            showNotification(
+              "warning",
+              "Elevated Humidity",
+              `Humidity is ${humidity}% (Approaching threshold)`
+            );
+          }
+
+          if (co2 > 1200) {
+            showNotification(
+              "alert",
+              "High CO2",
+              `CO2 level is ${co2}ppm (Above 1200ppm threshold)`
+            );
+          } else if (co2 > 1000) {
+            showNotification(
+              "warning",
+              "Elevated CO2",
+              `CO2 level is ${co2}ppm (Approaching threshold)`
+            );
+          }
+
+          if (pressure > 1100) {
+            showNotification(
+              "alert",
+              "High Pressure",
+              `Pressure is ${pressure}hPa (Above 1100hPa threshold)`
+            );
+          }
+
+          if (light > 1200) {
+            showNotification(
+              "alert",
+              "High Light",
+              `Light is ${light}lux (Above 1200lux threshold)`
+            );
+          } else if (light > 1000) {
+            showNotification(
+              "warning",
+              "Elevated Light",
+              `Light is ${light}lux (Approaching threshold)`
+            );
+          }
+        }
+      }
+
+      // Simulate live data updates
+      let time = 0;
+      let interval;
+      function startUpdates() {
+        interval = setInterval(() => {
+          const label = `12:${time.toString().padStart(2, "0")}`;
+          const temperature = 20 + Math.random() * 15; // 20-35°C
+          const humidity = 40 + Math.random() * 40; // 40-80%
+          const co2 = 400 + Math.random() * 600; // 400-1000 ppm
+          const pressure = 900 + Math.random() * 200; // 900-1100 hPa
+          const light = 100 + Math.random() * 900; // 100-1000 lux
+          addData(label, temperature, humidity, co2, pressure, light);
+          time += 5;
+        }, 2000); // Update every 2 seconds
+      }
+
+      function stopUpdates() {
+        clearInterval(interval);
+      }
+
+      // Export data as JSON
+      function exportData() {
+        const data = {
+          temperature: temperatureData,
+          humidity: humidityData,
+          co2: co2Data,
+          pressure: pressureData,
+          light: lightData,
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "iot-data.json";
+        a.click();
+      }
+
+      // Toggle dark mode
+      function toggleDarkMode() {
+        darkMode = !darkMode;
+
+        document.body.classList.toggle("dark-mode");
+        const isDarkMode = document.body.classList.contains("dark-mode");
+
+        // Update charts
+
+        // Update chart themes
+        if (darkMode) {
+          lineChart.updateOptions({
+            chart: { foreColor: "#b2bec3" },
+            grid: { borderColor: "#2d3436" },
+            xaxis: { labels: { style: { colors: "#b2bec3" } } },
+            yaxis: { labels: { style: { colors: "#b2bec3" } } },
+            legend: { labels: { colors: "#b2bec3" } },
+          });
+
+          barChart.updateOptions({
+            chart: { foreColor: "#b2bec3" },
+            xaxis: { labels: { style: { colors: "#b2bec3" } } },
+            yaxis: { labels: { style: { colors: "#b2bec3" } } },
+            legend: { labels: { colors: "#b2bec3" } },
+          });
+
+          pieChart.updateOptions({
+            chart: { foreColor: "#b2bec3" },
+            legend: { labels: { colors: "#b2bec3" } },
+          });
+        } else {
+          lineChart.updateOptions({
+            chart: { foreColor: "#333" },
+            grid: { borderColor: "#eee" },
+            xaxis: { labels: { style: { colors: "#666" } } },
+            yaxis: { labels: { style: { colors: "#666" } } },
+            legend: { labels: { colors: "#b0bec5" } },
+          });
+
+          barChart.updateOptions({
+            chart: { foreColor: "#333" },
+            xaxis: { labels: { style: { colors: "#666" } } },
+            yaxis: { labels: { style: { colors: "#666" } } },
+            legend: { labels: { colors: "#b0bec5" } },
+          });
+
+          pieChart.updateOptions({
+            chart: { foreColor: "#333" },
+            legend: { labels: { colors: "#b0bec5" } },
+          });
+        }
+      }
+      // Update chart options for dark mode
+      function updateChartsForDarkMode(isDarkMode) {
+        const newBorderColor = isDarkMode ? "#34495e" : "#eee";
+
+        charts.forEach((chart) => {
+          chart.updateOptions({
+            grid: {
+              borderColor: newBorderColor,
+            },
+          });
+        });
+      }
+
+      // Event listeners
+      document
+        .getElementById("startBtn")
+        .addEventListener("click", startUpdates);
+      document.getElementById("stopBtn").addEventListener("click", stopUpdates);
+      document
+        .getElementById("exportBtn")
+        .addEventListener("click", exportData);
+      document
+        .getElementById("darkModeBtn")
+        .addEventListener("click", toggleDarkMode);
+    </script>
+  </body>
+</html>

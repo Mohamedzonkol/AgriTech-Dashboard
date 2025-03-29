@@ -13,6 +13,7 @@ export const NAV_TABS = [
   { id: "fields", label: "Field Management" },
   { id: "equipment", label: "Equipment" },
   { id: "reports", label: "Reports" },
+  { id: "liveMonitoring", label: "Live Monitoring" },
 ];
 
 // Alert severity styles

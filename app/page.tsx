@@ -8,6 +8,7 @@ import AnalyticsPage from "../pages/AnalyticsPage";
 import FieldManagementPage from "../pages/FieldManagementPage";
 import ReportsPage from "../pages/ReportsPage";
 import EquipmentPage from "@/pages/EquipmentPage";
+import LivePage from "@/pages/LiveMonitoringPage";
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState("dashboard");
@@ -24,6 +25,8 @@ export default function Home() {
         return <EquipmentPage />;
       case "reports":
         return <ReportsPage />;
+      case "liveMonitoring":
+        return <LivePage />;
       default:
         return <DashboardPage />;
     }
