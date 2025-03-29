@@ -10,13 +10,14 @@ import SkeletonLoader from "./SkeletonLoader";
 import ErrorMessage from "./ErrorMessage";
 
 const FieldList = () => {
-  const { fields, loading, error, addField, updateField, deleteField } = useFieldData();
+  const { fields, loading, error, addField, updateField, deleteField } =
+    useFieldData();
   const [isEditing, setIsEditing] = useState<Field | null>(null);
   const [fieldToDelete, setFieldToDelete] = useState<Field | null>(null);
 
   const handleSave = async (field: Field) => {
     try {
-      if (fields.some(f => f.id === field.id)) {
+      if (fields.some((f) => f.id === field.id)) {
         await updateField(field);
       } else {
         await addField(field);
@@ -52,13 +53,12 @@ const FieldList = () => {
 
   return (
     <div className="space-y-6">
-    <header className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-      <h2 className="text-2xl font-bold text-gray-900">Fields Management</h2>
-      <div className="flex items-center gap-6">
-      <span className="text-blue-600 text-sm md:text-base font-semibold">
-  {fields.length} {fields.length === 1 ? "Field" : "Fields"}
-</span>
-
+      <header className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+        <h2 className="text-2xl font-bold text-gray-900">Fields Management</h2>
+        <div className="flex items-center gap-6">
+          <span className="text-blue-600 text-sm md:text-base font-semibold">
+            {fields.length} {fields.length === 1 ? "Field" : "Fields"}
+          </span>
 
           <button
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
@@ -89,7 +89,9 @@ const FieldList = () => {
               key={field.id}
               field={field}
               onEdit={setIsEditing}
-              onDelete={(id) => setFieldToDelete(fields.find(f => f.id === id) || null)}
+              onDelete={(id) =>
+                setFieldToDelete(fields.find((f) => f.id === id) || null)
+              }
             />
           ))}
         </div>
@@ -101,7 +103,7 @@ const FieldList = () => {
           field={isEditing}
           onSave={handleSave}
           onCancel={() => setIsEditing(null)}
-          isEditing={fields.some(f => f.id === isEditing.id)}
+          isEditing={fields.some((f) => f.id === isEditing.id)}
         />
       )}
 
