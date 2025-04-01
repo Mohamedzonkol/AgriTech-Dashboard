@@ -1,6 +1,7 @@
 import { Equipment } from "../types";
 
-const API_URL = "http://localhost:5070/api/Dashbored";
+// const API_URL = "http://localhost:5070/api/Dashbored";
+const API_URL = "https://crop-pilot-api.azurewebsites.net/api/Dashbored";
 
 export const fetchEquipmentsAPI = async () => {
   const response = await fetch(`${API_URL}/Equipments`);

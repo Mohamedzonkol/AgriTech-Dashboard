@@ -1,6 +1,7 @@
 import { Field } from "../types";
 
-const API_URL = "http://localhost:5070/api/Dashbored";
+// const API_URL = "http://localhost:5070/api/Dashbored";
+const API_URL = "https://crop-pilot-api.azurewebsites.net/api/Dashbored";
 
 export const fetchFieldsAPI = async () => {
   const response = await fetch(`${API_URL}/Fields`);
@@ -30,7 +31,7 @@ export const addFieldAPI = async (newField: Omit<Field, "id">) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      name: newField.name,  
+      name: newField.name,
       size: newField.size,
       crop: newField.crop,
       plantingDate: `${newField.plantingDate}T00:00:00`,
@@ -41,7 +42,9 @@ export const addFieldAPI = async (newField: Omit<Field, "id">) => {
   });
   console.log(response);
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status} and ${response.statusText}`);
+    throw new Error(
+      `HTTP error! status: ${response.status} and ${response.statusText}`
+    );
   }
   return response.json();
 };
@@ -55,12 +58,12 @@ export const updateFieldAPI = async (updatedField: Field) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      id: fieldId, 
+      id: fieldId,
       name: updatedField.name,
       size: updatedField.size,
       crop: updatedField.crop,
-      plantingDate: updatedField.plantingDate, 
-      harvestDate: updatedField.harvestDate,  
+      plantingDate: updatedField.plantingDate,
+      harvestDate: updatedField.harvestDate,
       irrigation: updatedField.irrigation,
       status: updatedField.status,
     }),
@@ -79,7 +82,6 @@ export const updateFieldAPI = async (updatedField: Field) => {
 
   return { message: "Field updated successfully" }; // Fallback message
 };
-
 
 export const deleteFieldAPI = async (id: string) => {
   const fieldId = parseInt(id.replace("FLD-", ""));
