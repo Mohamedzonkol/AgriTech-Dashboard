@@ -52,10 +52,7 @@ const DashboardContent = () => {
         loading={isLoading && !currentWeather}
       />
 
-      <FarmStatusCard
-        status={farmStatus}
-        //  loading={isLoading && !farmStatus}
-      />
+      <FarmStatusCard />
 
       <AlertCard
         alerts={alerts}
