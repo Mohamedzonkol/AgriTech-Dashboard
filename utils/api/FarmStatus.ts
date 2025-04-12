@@ -1,4 +1,6 @@
- const API_URL = "http://localhost:5070/api/Dashbored";
+const API_URL = "https://crop-pilot-api.azurewebsites.net/api/Dashbored";
+
+// const API_URL = "http://localhost:5070/api/Dashbored";
  export const fetchFarmStatusApi = async () => {
     try {
       const response = await fetch(`${API_URL}/FarmStatus`);
