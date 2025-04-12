@@ -28,7 +28,7 @@ const WeatherCard = ({
   if (loading) {
     return (
       <div
-        className={`backdrop-blur-md bg-white/30 border border-gray-200 rounded-xl shadow-lg p-6 flex flex-col col-span-1 ${className}`}
+        className={`backdrop-blur-md bg-white/30 border border-gray-200 rounded-xl shadow-lg p-6 flex flex-col col-span-1 ${className} `}
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-900">

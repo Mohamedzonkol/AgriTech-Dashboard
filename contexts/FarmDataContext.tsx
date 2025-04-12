@@ -11,6 +11,7 @@ import React, {
 import { useFarmData } from "../hooks/useFarmData";
 import { useWeatherData } from "../hooks/useWeatherData";
 import { useEquipmentData } from "../hooks/useEquipmentData";
+import { useFarmStatusData } from "../hooks/useFarmStatusData";
 import type {
   CropYieldData,
   SoilMoistureData,
@@ -48,7 +49,7 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
   const farmData = useFarmData();
   const weatherData = useWeatherData();
   const equipmentData = useEquipmentData();
-
+  const farmStatusData = useFarmStatusData();
   useEffect(() => {
     setIsInitialized(true);
   }, []);
@@ -58,7 +59,8 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
     const errors = [
       farmData.error,
       weatherData.error,
-      equipmentData.error
+      equipmentData.error,
+      farmStatusData.error
     ].filter(Boolean);
 
     if (errors.length === 0) return null;
@@ -72,7 +74,7 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
     return errorObjects.length === 1 
       ? errorObjects[0]
       : new Error(errorObjects.map(e => e.message).join('; '));
-  }, [farmData.error, weatherData.error, equipmentData.error]);
+  }, [farmData.error, weatherData.error, equipmentData.error, farmStatusData.error]);
 
   const contextValue = useMemo(() => ({
     isInitialized,
@@ -98,7 +100,8 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
     isLoading: Boolean(
       farmData.loading || 
       weatherData.loading || 
-      equipmentData.loading
+      equipmentData.loading ||
+      farmStatusData.loading
     ),
     error: normalizedError
   }), [
@@ -106,6 +109,7 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
     farmData,
     weatherData,
     equipmentData,
+    farmStatusData,
     normalizedError
   ]);
 
