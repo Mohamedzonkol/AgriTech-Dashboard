@@ -78,7 +78,7 @@ const DashboardContent = () => {
 
       {/* Right Column */}
       <WeatherForecast
-        forecast={weatherForecast?.slice(0, 4)}
+        forecast={weatherForecast?.slice(0, 5)}
         loading={isLoading && !weatherForecast}
       />
 
