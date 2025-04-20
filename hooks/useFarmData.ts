@@ -26,14 +26,14 @@ export const useFarmData = () => {
     pestRisk: "Low",
     waterReservoir: faker.number.int({ min: 30, max: 100 }),
     solarGeneration: faker.number.int({ min: 50, max: 200 }),
- 
+
   });
   const [cropYieldData, setCropYieldData] = useState<CropYieldData[]>(
     generateCropYieldData()
   );
-  const [soilMoistureData, setSoilMoistureData] = useState<SoilMoistureData[]>(
-    generateSoilMoistureData()
-  );
+  // const [soilMoistureData, setSoilMoistureData] = useState<SoilMoistureData[]>(
+  //   generateSoilMoistureData()
+  // );
   const [alerts, setAlerts] = useState<Alert[]>(generateAlerts());
   const [fieldData, setFieldData] = useState<Field[]>(generateFieldData());
   const [unreadAlerts, setUnreadAlerts] = useState(
@@ -46,7 +46,7 @@ export const useFarmData = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
       setCropYieldData(generateCropYieldData());
-      setSoilMoistureData(generateSoilMoistureData());
+      // setSoilMoistureData(generateSoilMoistureData());
       setFieldData(generateFieldData());
       setError(null);
     } catch (err) {
@@ -64,7 +64,7 @@ export const useFarmData = () => {
   // Simulate real-time data updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setSoilMoistureData((prev) => {
+      ((prev) => {
         const newData = [...prev];
         const randomIndex = Math.floor(Math.random() * newData.length);
         newData[randomIndex].moisture = Math.max(
@@ -123,7 +123,6 @@ export const useFarmData = () => {
     error,
     farmStatus,
     cropYieldData,
-    soilMoistureData,
     alerts,
     fieldData,
     unreadAlerts,
@@ -131,5 +130,6 @@ export const useFarmData = () => {
     markAllAlertsAsRead,
     setFieldData,
     refreshFarmData,
+
   };
 };

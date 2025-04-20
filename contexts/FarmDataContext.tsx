@@ -12,6 +12,7 @@ import { useFarmData } from "../hooks/useFarmData";
 import { useWeatherData } from "../hooks/useWeatherData";
 import { useEquipmentData } from "../hooks/useEquipmentData";
 import { useFarmStatusData } from "../hooks/useFarmStatusData";
+import { useSoilMoistureData } from "../hooks/UseSoilMoistureData";
 import type {
   CropYieldData,
   SoilMoistureData,
@@ -50,6 +51,7 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
   const weatherData = useWeatherData();
   const equipmentData = useEquipmentData();
   const farmStatusData = useFarmStatusData();
+  const soilMoistureData = useSoilMoistureData();
   useEffect(() => {
     setIsInitialized(true);
   }, []);
@@ -60,7 +62,8 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
       farmData.error,
       weatherData.error,
       equipmentData.error,
-      farmStatusData.error
+      farmStatusData.error,
+      soilMoistureData.error
     ].filter(Boolean);
 
     if (errors.length === 0) return null;
@@ -74,12 +77,12 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
     return errorObjects.length === 1 
       ? errorObjects[0]
       : new Error(errorObjects.map(e => e.message).join('; '));
-  }, [farmData.error, weatherData.error, equipmentData.error, farmStatusData.error]);
+  }, [farmData.error, weatherData.error, equipmentData.error, farmStatusData.error, soilMoistureData.error]);
 
   const contextValue = useMemo(() => ({
     isInitialized,
     cropYieldData: farmData.cropYieldData,
-    soilMoistureData: farmData.soilMoistureData,
+    soilMoistureData: soilMoistureData.soilData,
     alerts: farmData.alerts,
     fieldData: farmData.fieldData,
     equipmentData: equipmentData.equipments,
@@ -94,14 +97,17 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
       await Promise.all([
         farmData.refreshFarmData(),
         weatherData.refresh(),
-        equipmentData.refetch()
+        equipmentData.refetch(),
+        soilMoistureData.fetchSoilMoistureData()
+        
       ]);
     },
     isLoading: Boolean(
       farmData.loading || 
       weatherData.loading || 
       equipmentData.loading ||
-      farmStatusData.loading
+      farmStatusData.loading||
+      soilMoistureData.loading
     ),
     error: normalizedError
   }), [
@@ -110,6 +116,7 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
     weatherData,
     equipmentData,
     farmStatusData,
+    soilMoistureData,
     normalizedError
   ]);
 

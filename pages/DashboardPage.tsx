@@ -67,8 +67,8 @@ const DashboardContent = () => {
       />
 
       <SoilMoistureChart
-        data={soilMoistureData}
-        // loading={isLoading && !soilMoistureData}
+        soilMoisture={soilMoistureData}
+        loading={isLoading && !soilMoistureData}
       />
 
       <EquipmentStatus

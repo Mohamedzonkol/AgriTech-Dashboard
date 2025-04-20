@@ -77,6 +77,7 @@ export interface CropYieldData {
 }
 
 export interface SoilMoistureData {
+  id: string;
   name: string;
   moisture: number;
   optimal: number;

@@ -1,206 +1,3 @@
-// "use client";
-// import {
-//   BarChart,
-//   Bar,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-//   Tooltip,
-//   Legend,
-//   ResponsiveContainer,
-// } from "recharts";
-// import { CHART_COLORS } from "../../utils/constants";
-// import { useFieldData } from "../../hooks/useFieldData";
-// import React from "react";
-// import { Droplet, Thermometer, AlertTriangle, Loader2, RefreshCw } from "lucide-react";
-
-// const SoilMoistureChart = () => {
-//   const { fields, loading, error, fetchFields } = useFieldData();
-
-//   Transform field data for the chart
-//   const chartData = React.useMemo(() => {
-//     return fields.map(field => ({
-//       name: field.name || 'Unknown Field',
-//       // moisture: field.moistureLevel || 0,
-//       // optimal: field.optimalMoisture || 60, // Default optimal level
-//       moisture : 30,
-//       optimal : 60
-//       ph: field.phValue || 6.5,
-//       temperature: field.soilTemperature,
-//       lastUpdated: field.lastReading
-//     }));
-//   }, [fields]);
-
-//   const refreshData = () => {
-//     React.startTransition(() => {
-//       fetchFields();
-//     });
-//   };
-
-//   if (loading && !fields.length) {
-//     return (
-//       <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-2">
-//         <div className="flex justify-between items-center mb-4">
-//           <h2 className="text-xl font-bold text-gray-800">
-//             Field Soil Conditions
-//           </h2>
-//           <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
-//         </div>
-//         <div className="h-[300px] flex flex-col items-center justify-center gap-4">
-//           <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-//           <p className="text-gray-600">Loading field data...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-2">
-//         <h2 className="text-xl font-bold text-gray-800 mb-4">
-//           Field Soil Conditions
-//         </h2>
-//         <div className="h-[300px] flex flex-col items-center justify-center gap-4 text-red-500">
-//           <AlertTriangle className="w-8 h-8" />
-//           <p>{error}</p>
-//           <button
-//             onClick={refreshData}
-//             className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-2"
-//           >
-//             <RefreshCw className="w-4 h-4" />
-//             Retry
-//           </button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   if (!fields.length) {
-//     return (
-//       <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-2">
-//         <h2 className="text-xl font-bold text-gray-800 mb-4">
-//           Field Soil Conditions
-//         </h2>
-//         <div className="h-[300px] flex flex-col items-center justify-center gap-4 text-gray-500">
-//           <Droplet className="w-8 h-8" />
-//           <p>No field data available</p>
-//           <button
-//             onClick={refreshData}
-//             className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
-//           >
-//             <RefreshCw className="w-4 h-4" />
-//             Refresh
-//           </button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-2">
-//       <div className="flex justify-between items-center mb-4">
-//         <h2 className="text-xl font-bold text-gray-800">
-//           Field Soil Conditions
-//         </h2>
-//         <button
-//           onClick={refreshData}
-//           disabled={loading}
-//           className="text-sm text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
-//         >
-//           {loading ? (
-//             <Loader2 className="w-4 h-4 animate-spin" />
-//           ) : (
-//             <RefreshCw className="w-4 h-4" />
-//           )}
-//           Refresh
-//         </button>
-//       </div>
-
-//       <ResponsiveContainer width="100%" height={300}>
-//         <BarChart data={chartData}>
-//           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-//           <XAxis 
-//             dataKey="name" 
-//             tick={{ fontSize: 12 }}
-//             interval={0}
-//             angle={-45}
-//             textAnchor="end"
-//             height={60}
-//           />
-//           <YAxis
-//             domain={[0, 100]}
-//             label={{
-//               value: "Moisture (%)",
-//               angle: -90,
-//               position: "insideLeft",
-//               style: { textAnchor: 'middle' }
-//             }}
-//           />
-//           <Tooltip 
-//             contentStyle={{ 
-//               backgroundColor: '#fff',
-//               border: '1px solid #e5e7eb',
-//               borderRadius: '0.5rem'
-//             }}
-//           />
-//           <Legend />
-//           <Bar
-//             dataKey="moisture"
-//             name="Current Moisture"
-//             fill={CHART_COLORS[0]}
-//             radius={[4, 4, 0, 0]}
-//           />
-//           <Bar
-//             dataKey="optimal"
-//             name="Optimal Level"
-//             fill={CHART_COLORS[1]}
-//             opacity={0.5}
-//             radius={[4, 4, 0, 0]}
-//           />
-//         </BarChart>
-//       </ResponsiveContainer>
-
-//       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-//         {chartData.map((field) => (
-//           <div key={field.name} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-//             <div className="flex justify-between items-start">
-//               <h3 className="font-medium text-gray-800">{field.name}</h3>
-//               <span
-//                 className={`text-sm px-2 py-1 rounded-full ${
-//                   field.moisture < field.optimal * 0.7
-//                     ? "bg-red-100 text-red-800"
-//                     : field.moisture > field.optimal * 1.3
-//                     ? "bg-yellow-100 text-yellow-800"
-//                     : "bg-green-100 text-green-800"
-//                 }`}
-//               >
-//                 {field.moisture}%
-//               </span>
-//             </div>
-            
-//             <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-//               <div className="flex items-center gap-1 text-gray-600">
-//                 <Droplet className="w-4 h-4 text-blue-500" />
-//                 <span>Optimal: {field.optimal}%</span>
-//               </div>
-//               <div className="flex items-center gap-1 text-gray-600">
-//                 <Thermometer className="w-4 h-4 text-orange-500" />
-//                 <span>Temp: {field.temperature ? `${field.temperature}°C` : 'N/A'}</span>
-//               </div>
-//               <div className="col-span-2 text-xs text-gray-500">
-//                 Updated: {field.lastUpdated ? 
-//                   new Date(field.lastUpdated).toLocaleString() : 
-//                   'Unknown'}
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default SoilMoistureChart;
 "use client";
 import {
   BarChart,
@@ -212,62 +9,282 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import {
+  AlertTriangle,
+  Loader2,
+  Droplets,
+  RefreshCw,
+} from "lucide-react";
 import { CHART_COLORS } from "../../utils/constants";
 import type { SoilMoistureData } from "../../utils/types";
-import React from "react";
+import React, { useState } from "react";
+import { useSoilMoistureData } from "@/hooks/UseSoilMoistureData";
 
-const SoilMoistureChart = ({ data }: { data: SoilMoistureData[] }) => {
+interface SoilMoistureStatusProps {
+  soilMoisture?: SoilMoistureData[];
+  error?: string | null;
+  loading?: boolean;
+  className?: string;
+  onRefresh?: () => void;
+}
+
+const SoilMoistureChart = ({
+  soilMoisture: initialSoilMoisture = [],
+  error: propError,
+  loading: propLoading,
+  className = "",
+  onRefresh,
+}: SoilMoistureStatusProps) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { soilData, loading: hookLoading, error: hookError, refetch } = useSoilMoistureData();
+  
+  // Use props if provided, otherwise use hook data
+  const soilMoisture = initialSoilMoisture.length > 0 ? initialSoilMoisture : soilData;
+  const error = propError || hookError;
+  const loading = propLoading || hookLoading || isRefreshing;
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      if (onRefresh) {
+        await onRefresh();
+      } else {
+        await refetch();
+      }
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className={`bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 col-span-2 ${className}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white/90">
+            Soil Moisture Status
+          </h2>
+          <div className="h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+            <Loader2 className="w-4 h-4 text-gray-500 dark:text-gray-400 animate-spin" />
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+          <div className="relative">
+            <div className="w-16 h-16 bg-gradient-to-tr from-green-500 to-emerald-400 rounded-full flex items-center justify-center shadow-lg">
+              <Loader2 className="w-6 h-6 text-white animate-spin" />
+            </div>
+            <div className="absolute -inset-1.5 border-2 border-green-400/30 rounded-full animate-pulse" />
+          </div>
+          <div className="text-center space-y-2">
+            <p className="text-gray-700 dark:text-gray-300 font-bold">
+              Loading soil data
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400/80">
+              Gathering readings from sensors...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`bg-white dark:bg-gray-900 rounded-xl border border-red-100 dark:border-red-900/50 shadow-sm p-6 col-span-2${className}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white/90">
+            Soil Moisture Status
+          </h2>
+          <button 
+            onClick={handleRefresh}
+            disabled={loading}
+            className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+            aria-label="Refresh data"
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 text-gray-500 dark:text-gray-400 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            )}
+          </button>
+        </div>
+        <div className="flex flex-col items-center justify-center py-10 space-y-4">
+          <div className="relative">
+            <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-rose-100 dark:from-red-900/30 dark:to-rose-900/20 rounded-full flex items-center justify-center shadow-lg">
+              <AlertTriangle className="w-7 h-7 text-red-500 dark:text-red-400" />
+            </div>
+            <div className="absolute -inset-1.5 border-2 border-red-200 dark:border-red-900/30 rounded-full" />
+          </div>
+          <div className="text-center space-y-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+              Failed to load data
+            </h3>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 max-w-xs">
+              {error}
+            </p>
+            <button
+              onClick={handleRefresh}
+              disabled={loading}
+              className="mt-3 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-300 transition-colors flex items-center space-x-2"
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
+              <span>{loading ? "Refreshing..." : "Try again"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!soilMoisture || soilMoisture.length === 0) {
+    return (
+      <div className={`bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 col-span-2 ${className}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white/90">
+            Soil Moisture Status
+          </h2>
+          <button 
+            onClick={handleRefresh}
+            disabled={loading}
+            className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+            aria-label="Refresh data"
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 text-gray-500 dark:text-gray-400 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            )}
+          </button>
+        </div>
+  
+        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+          <div className="relative">
+            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center shadow-inner">
+              <Droplets className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+            </div>
+            <div className="absolute -inset-1.5 border-2 border-gray-200 dark:border-gray-700/30 rounded-full" />
+          </div>
+  
+          <div className="text-center space-y-2">
+            <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300">
+              No data available
+            </h3>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              Sensor readings have not been received yet.
+            </p>
+          </div>
+  
+         
+          <div className="flex justify-center">
+            <button
+              onClick={handleRefresh}
+              disabled={loading}
+              className="mt-3 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-300 transition-colors flex items-center space-x-2"
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
+              <span>{loading ? "Refreshing..." : "Refresh"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 col-span-1 md:col-span-2">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">
-        Field Soil Moisture Levels
-      </h2>
+    <div className={`bg-white rounded-xl shadow-lg p-6 col-span-2 ${className} `}>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold text-gray-900 ">
+          Field Soil Moisture Levels
+        </h2>
+        <button 
+          onClick={handleRefresh}
+          className={`h-8 w-8 rounded-full ${loading ? 'bg-gray-100 dark:bg-gray-800' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700'} flex items-center justify-center transition-colors`}
+          disabled={loading}
+          aria-label="Refresh data"
+        >
+          {loading ? (
+            <Loader2 className="w-4 h-4 text-gray-500 dark:text-gray-400 animate-spin col-span-2" />
+          ) : (
+            <RefreshCw className="w-4 h-4 text-gray-500 dark:text-gray-400 col-span-2" />
+          )}
+        </button>
+      </div>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+        <BarChart data={soilMoisture}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#eee" strokeOpacity={0.3} />
+          <XAxis 
+            dataKey="name" 
+            stroke="#888" 
+            tick={{ fill: '#666', fontSize: 12 }}
+          />
           <YAxis
             domain={[0, 100]}
+            stroke="#888"
+            tick={{ fill: '#666', fontSize: 12 }}
             label={{
               value: "Moisture (%)",
               angle: -90,
               position: "insideLeft",
+              fill: '#666',
+              fontSize: 12,
             }}
           />
-          <Tooltip />
+          <Tooltip 
+            contentStyle={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderColor: '#eee',
+              borderRadius: '0.5rem',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            }}
+          />
           <Legend />
           <Bar
             dataKey="moisture"
             name="Current Moisture"
             fill={CHART_COLORS[0]}
+            radius={[4, 4, 0, 0]}
           />
           <Bar
             dataKey="optimal"
             name="Optimal Level"
             fill={CHART_COLORS[1]}
-            opacity={0.5}
+            opacity={0.7}
+            radius={[4, 4, 0, 0]}
           />
         </BarChart>
       </ResponsiveContainer>
-      <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {data.slice(0, 8).map((field) => (
-          <div key={field.name} className="bg-gray-50 p-3 rounded-lg">
-            <div className="flex justify-between">
-              <span className="font-medium">{field.name}</span>
+      <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 ">
+        {soilMoisture.slice(0, 8).map((field) => (
+          <div 
+            key={field.id} 
+            className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700/50 hover:shadow-sm transition-shadow transition-transform hover:scale-105 duration-300"
+          >
+            <div className="flex justify-between items-center ">
+              <span className="font-bold text-gray-600 dark:text-gray-300 text-sm">
+                {field.name}
+              </span>
               <span
-                className={`text-sm ${
+                className={`text-xs font-bold px-2 py-1 rounded-full ${
                   field.moisture < 40
-                    ? "text-red-500"
+                    ? "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400"
                     : field.moisture > 80
-                    ? "text-yellow-500"
-                    : "text-green-500"
+                    ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400"
+                    : "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"
                 }`}
               >
                 {field.moisture}%
               </span>
             </div>
-            <div className="text-sm text-gray-500 mt-1">
-              pH: {field.ph.toFixed(1)}
+            <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1.5">
+              pH: {field.ph.toFixed(2)}
             </div>
           </div>
         ))}
@@ -275,4 +292,5 @@ const SoilMoistureChart = ({ data }: { data: SoilMoistureData[] }) => {
     </div>
   );
 };
+
 export default SoilMoistureChart;
