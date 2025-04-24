@@ -36,8 +36,8 @@ const CropAnalysisModal = () => {
       {/* Button to open the modal */}
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4  transition-transform hover:scale-105 duration-300 rounded-lg flex flex-col items-center transition"
-      >
+        className="relative bg-gradient-to-br from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-3 px-6 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20 hover:-translate-y-0.5"
+        >
         <BarChart2 className="w-6 h-6 mb-1" />
         <span>Crop Analysis</span>
       </button>

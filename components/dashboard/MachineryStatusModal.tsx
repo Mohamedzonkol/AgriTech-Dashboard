@@ -24,11 +24,10 @@ const MachineryStatusModal = () => {
   }, [isOpen]);
   return (
     <>
-      {/* Button to open the modal */}
-      <button
+        <button
         onClick={() => setIsOpen(true)}
-        className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg flex flex-col items-center transition-transform hover:scale-105 duration-300"
-      >
+  className="relative bg-gradient-to-br from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white py-3 px-4 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/20 hover:-translate-y-0.5"
+        >
         <Tractor className="w-6 h-6 mb-1" />
         <span>Check Machinery</span>
       </button>

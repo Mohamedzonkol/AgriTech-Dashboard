@@ -123,25 +123,30 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
 
   return (
     <>
-      {/* Button to open the soil report */}
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-amber-500 hover:bg-amber-600 text-white py-3 px-4 rounded-lg flex flex-col col-span-2 items-center transition-transform hover:scale-105 duration-300"
+        className="relative bg-gradient-to-br from-amber-500 col-span-2 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 px-6 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20 hover:-translate-y-0.5"
       >
+        <div className="absolute -top-2 -right-2 bg-white text-amber-600 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm">
+          Api
+        </div>
         <Layers className="w-6 h-6 mb-1" />
-        <span>Soil Report</span>
+        <span className="font-medium">Soil Report</span>
       </button>
 
       {/* Soil Report Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transition-all duration-300 transform">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-white p-4 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-gray-800">Soil Quality Report</h2>
+            <div className="sticky top-0 bg-white p-5 border-b border-gray-100 flex justify-between items-center rounded-t-2xl">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Soil Quality Report</h2>
+                <p className="text-sm text-gray-500">AI-powered soil analysis</p>
+              </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-full hover:bg-gray-100"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -150,12 +155,15 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
             {/* Modal Content */}
             <div className="p-6">
               {loading ? (
-                <div className="flex flex-col items-center justify-center py-8">
-                  <Loader2 className="w-8 h-8 text-amber-500 animate-spin mb-4" />
-                  <p className="text-gray-600">Loading soil data...</p>
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="relative">
+                    <Layers className="w-10 h-10 text-amber-500 opacity-30" />
+                    <Loader2 className="w-6 h-6 text-amber-500 animate-spin absolute inset-0 m-auto" />
+                  </div>
+                  <p className="text-gray-500 mt-4">Analyzing soil data...</p>
                 </div>
               ) : error ? (
-                <div className="bg-red-50 border border-red-100 rounded-lg p-4">
+                <div className="bg-red-50 border border-red-100 rounded-xl p-5 animate-fade-in">
                   <h3 className="font-medium text-red-800 flex items-center mb-2">
                     <AlertTriangle className="w-5 h-5 mr-2" />
                     Error Loading Data
@@ -163,8 +171,9 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
                   <p className="text-red-700">{error}</p>
                   <button
                     onClick={fetchSoilData}
-                    className="mt-3 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded-lg transition"
+                    className="mt-3 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-800 rounded-lg transition flex items-center"
                   >
+                    <Loader2 className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : 'hidden'}`} />
                     Retry
                   </button>
                 </div>
@@ -185,7 +194,7 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Moisture */}
-                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                       <div className="flex items-center mb-2">
                         <Droplet className="w-5 h-5 text-blue-500 mr-2" />
                         <h3 className="font-medium text-gray-700">Moisture</h3>
@@ -208,7 +217,7 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
                     </div>
 
                     {/* pH Level */}
-                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                       <div className="flex items-center mb-2">
                         <Gauge className="w-5 h-5 text-purple-500 mr-2" />
                         <h3 className="font-medium text-gray-700">pH Level</h3>
@@ -231,7 +240,7 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
                     </div>
 
                     {/* Clay Content */}
-                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                       <div className="flex items-center mb-2">
                         <Layers className="w-5 h-5 text-amber-500 mr-2" />
                         <h3 className="font-medium text-gray-700">Clay Content</h3>
@@ -254,7 +263,7 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
                     </div>
 
                     {/* Organic Carbon */}
-                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                       <div className="flex items-center mb-2">
                         <Leaf className="w-5 h-5 text-green-500 mr-2" />
                         <h3 className="font-medium text-gray-700">Organic Carbon</h3>
@@ -278,42 +287,71 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
                   </div>
 
                   {/* Recommendations */}
-                  <div className="mt-6 bg-amber-50 border border-amber-100 rounded-lg p-4">
-                    <h3 className="font-medium text-amber-800 flex items-center mb-2">
-                      <FlaskConical className="w-4 h-4 mr-2" />
-                      Recommendations
+                  <div className="mt-6 bg-amber-50 border border-amber-100 rounded-xl p-5">
+                    <h3 className="font-medium text-amber-800 flex items-center mb-3">
+                      <FlaskConical className="w-5 h-5 mr-2" />
+                      AI Recommendations
                     </h3>
-                    <ul className="list-disc list-inside text-sm text-amber-800 space-y-1">
+                    <ul className="space-y-2">
                       {soilData.ph.value > 7.5 && (
-                        <li>Consider adding sulfur to lower pH</li>
+                        <li className="flex items-start">
+                          <span className="flex-shrink-0 bg-amber-100 text-amber-800 rounded-full p-1 mr-2">
+                            <Gauge className="w-3 h-3" />
+                          </span>
+                          <span>Consider adding sulfur to lower pH</span>
+                        </li>
                       )}
                       {soilData.ph.value < 6 && (
-                        <li>Consider adding lime to raise pH</li>
+                        <li className="flex items-start">
+                          <span className="flex-shrink-0 bg-amber-100 text-amber-800 rounded-full p-1 mr-2">
+                            <Gauge className="w-3 h-3" />
+                          </span>
+                          <span>Consider adding lime to raise pH</span>
+                        </li>
                       )}
                       {soilData.moisture.value < 3 && (
-                        <li>Irrigation recommended to increase moisture</li>
+                        <li className="flex items-start">
+                          <span className="flex-shrink-0 bg-amber-100 text-amber-800 rounded-full p-1 mr-2">
+                            <Droplet className="w-3 h-3" />
+                          </span>
+                          <span>Irrigation recommended to increase moisture</span>
+                        </li>
                       )}
                       {soilData.organicCarbon.value < 150 && (
-                        <li>Add organic compost to improve carbon content</li>
+                        <li className="flex items-start">
+                          <span className="flex-shrink-0 bg-amber-100 text-amber-800 rounded-full p-1 mr-2">
+                            <Leaf className="w-3 h-3" />
+                          </span>
+                          <span>Add organic compost to improve carbon content</span>
+                        </li>
                       )}
                       {soilData.qualityRating === "Poor" && (
-                        <li>Soil amendment strongly recommended</li>
+                        <li className="flex items-start">
+                          <span className="flex-shrink-0 bg-amber-100 text-amber-800 rounded-full p-1 mr-2">
+                            <AlertTriangle className="w-3 h-3" />
+                          </span>
+                          <span>Soil amendment strongly recommended</span>
+                        </li>
                       )}
                     </ul>
                   </div>
 
                   {/* Location Info */}
-                  <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                    <h3 className="font-medium text-gray-700 mb-2">
+                  <div className="mt-6 p-5 bg-gray-50 rounded-xl border border-gray-100">
+                    <h3 className="font-medium text-gray-700 mb-3">
                       Location Details
                     </h3>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium">Latitude:</span> {latitude}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium">Longitude:</span> {longitude}
-                    </p>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-xs text-gray-500">Latitude</p>
+                        <p className="font-medium">{latitude}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Longitude</p>
+                        <p className="font-medium">{longitude}</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-3">
                       Last updated: {new Date().toLocaleString()}
                     </p>
                   </div>
@@ -322,18 +360,19 @@ const SoilQualityButton = ({ latitude, longitude }: { latitude: number; longitud
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-white p-4 border-t border-gray-200 flex justify-end">
+            <div className="sticky bottom-0 bg-white p-5 border-t border-gray-100 rounded-b-2xl flex justify-end space-x-3">
               <button
                 onClick={() => setIsOpen(false)}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 transition"
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-800 transition"
               >
                 Close
               </button>
               {!loading && (
                 <button
                   onClick={fetchSoilData}
-                  className="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg transition ml-2"
+                  className="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg transition flex items-center"
                 >
+                  <Loader2 className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : 'hidden'}`} />
                   Refresh Data
                 </button>
               )}

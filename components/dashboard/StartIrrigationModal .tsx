@@ -32,8 +32,8 @@ const StartIrrigationModal = () => {
       {/* Button to open the modal */}
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg flex flex-col items-center  transition-transform hover:scale-105 duration-300"
-      >
+        className="relative bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 hover:-translate-y-0.5"
+        >
         <Droplet className="w-6 h-6 mb-1" />
         <span>Start Irrigation</span>
       </button>

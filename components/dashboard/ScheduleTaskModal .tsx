@@ -39,8 +39,8 @@ const ScheduleTaskModal = () => {
       {/* Button to open the modal */}
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-purple-500 hover:bg-purple-600 text-white py-3 px-4 rounded-lg flex flex-col items-center transition-transform hover:scale-105 duration-300"
-      >
+        className="relative bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 col-span-2 text-white py-3 px-6 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-0.5"
+        >
         <Calendar className="w-6 h-6 mb-1" />
         <span>Schedule Task</span>
       </button>

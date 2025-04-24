@@ -53,7 +53,7 @@ export interface Equipment {
   hoursUsed: number;
   battery: number;
   connectivity: "Online" | "Offline";
-  
+
 }
 
 // Field types
@@ -65,7 +65,7 @@ export interface Field {
   plantingDate: string;
   harvestDate: string;
   irrigation: string;
-  status: "Growing" | "Harvested" | "Planted" | "Fallow"| "Preparing";
+  status: "Growing" | "Harvested" | "Planted" | "Fallow" | "Preparing";
 }
 
 // Chart data types

@@ -33,8 +33,8 @@ const EmergencyAlertModal = () => {
       {/* Button to open the modal */}
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg flex flex-col col-span-2 items-center transition transition-transform hover:scale-105 duration-300"
-      >
+        className="relative bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 col-span-2 text-white py-3 px-6 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 hover:-translate-y-0.5"
+        >
         <AlertTriangle className="w-6 h-6 mb-1 " />
         <span>Emergency Alert</span>
       </button>
