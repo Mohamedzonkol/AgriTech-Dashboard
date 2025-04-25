@@ -35,14 +35,14 @@ export interface FarmStatus {
 
 
 export enum EmergencyType {
-  EquipmentFailure = "equipment",
-  MedicalEmergency = "medical",
-  Fire = "fire",
-  SevereWeather = "weather",
-  Pest = "pest",
-  Irrigation = "irrigation",
-  Soil = "soil",
-  Other = "other"
+  EquipmentFailure,
+  MedicalEmergency,
+  Fire,
+  SevereWeather,
+  Pest,
+  Irrigation,
+  Soil,
+  Other
 }
 export enum SeverityType {
   High = "High",

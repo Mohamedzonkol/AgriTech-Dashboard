@@ -3,9 +3,8 @@ import { EmergencyAlert } from "../types";
 export const fetchAllAlerts = async () => {
     try {
         const response = await fetch(
-            // "https://crop-pilot-api.azurewebsites.net/api/Dashbored/GetAlerts"
+            // "https://crop-pilot-api.azurewebsites.net/api/Dashbored/GetAlerts");
             "http://localhost:5070/api/Dashbored/GetAlerts");
-
         if (!response.ok) {
             throw new Error("Failed to fetch Alert data");
         }

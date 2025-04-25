@@ -61,6 +61,7 @@ export const useAlertData = () => {
         error,
         fetchAlerts,
         addAlert,
+        refreshAlerts: fetchAlerts,
         markAlertAsRead,
         unreadCount: alerts.filter(alert => !alert.read).length,
     };

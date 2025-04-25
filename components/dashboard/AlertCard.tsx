@@ -1,5 +1,5 @@
 "use client";
-import { AlertTriangle, ChevronRight, X } from "lucide-react";
+import { AlertTriangle, ChevronRight, X, RefreshCw } from "lucide-react";
 import { ALERT_SEVERITY_STYLES } from "../../utils/constants";
 import type { EmergencyAlert } from "../../utils/types";
 import { useAlertData } from "@/hooks/useAlertData";
@@ -12,10 +12,10 @@ import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api';
 
 
 const AlertCard = () => {
-  const { alerts, unreadCount, loading, error, markAlertAsRead } = useAlertData();
+  const { alerts, unreadCount, loading, error, markAlertAsRead, refreshAlerts } = useAlertData();
   const [selectedAlert, setSelectedAlert] = useState<EmergencyAlert | null>(null);
   const [showAllAlerts, setShowAllAlerts] = useState(false);
-
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const formatEmergencyType = useCallback((type: EmergencyType): string => {
     if (!type) return "Unknown";
     return type
@@ -35,13 +35,20 @@ const AlertCard = () => {
     height: '100%',
     borderRadius: '0.5rem',
   };
-
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refreshAlerts();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
   const center = {
     lat: selectedAlert?.latitude || 0,
     lng: selectedAlert?.longitude || 0,
   };
   const displayedAlerts = showAllAlerts ? alerts : alerts.slice(0, 5);
-  if (loading) {
+  if (loading && !isRefreshing) {
     return (
       <div className="bg-white rounded-xl shadow-lg p-6 animate-pulse space-y-4">
         <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
@@ -101,6 +108,23 @@ const AlertCard = () => {
               {unreadCount} unread
             </motion.span>
           )}
+          <div className="absolute -top-2 -right-2 bg-white text-blue-600 rounded-full w-7 h-7 flex items-center justify-center shadow-sm">
+            <motion.button
+              whileHover={{ rotate: 180, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              aria-label="Refresh alerts"
+              className="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+            >
+              <RefreshCw
+                className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${isRefreshing ? 'animate-spin' : ''
+                  }`}
+              />
+            </motion.button>
+
+          </div>
+
         </div>
 
         <div className="space-y-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar">
@@ -296,15 +320,6 @@ const AlertCard = () => {
                       </div>
                     </div>
                   </div>
-                  {/* {selectedAlert.latitude && selectedAlert.longitude && (
-                    <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
-                      <h4 className="font-bold text-emerald-800 mb-3">Map Location</h4>
-                      <MapComponent lat={selectedAlert.latitude} lng={selectedAlert.longitude} />
-                      <p className="text-emerald-500 text-xs mt-2 text-center">
-                        Coordinates: {selectedAlert.latitude.toFixed(4)}, {selectedAlert.longitude.toFixed(4)}
-                      </p>
-                    </div>
-                  )} */}
                   {selectedAlert.latitude && selectedAlert.longitude && (
                     <div className="bg-emerald-50 p-4 rounded-lg border border-gray-200">
                       <h4 className="font-bold text-gray-800 mb-3">Map Location</h4>
