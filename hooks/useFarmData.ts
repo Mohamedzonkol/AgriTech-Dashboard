@@ -10,7 +10,7 @@ import {
 import type {
   CropYieldData,
   SoilMoistureData,
-  Alert,
+  EmergencyAlert,
   Field,
   FarmStatus,
 } from "../utils/types";
@@ -34,7 +34,7 @@ export const useFarmData = () => {
   // const [soilMoistureData, setSoilMoistureData] = useState<SoilMoistureData[]>(
   //   generateSoilMoistureData()
   // );
-  const [alerts, setAlerts] = useState<Alert[]>(generateAlerts());
+  const [alerts, setAlerts] = useState<EmergencyAlert[]>(generateAlerts());
   const [fieldData, setFieldData] = useState<Field[]>(generateFieldData());
   const [unreadAlerts, setUnreadAlerts] = useState(
     alerts.filter((alert) => !alert.read).length
@@ -86,20 +86,20 @@ export const useFarmData = () => {
           "Weather",
           "Soil",
         ] as const;
-        const newAlert: Alert = {
-          id: crypto.randomUUID(),
-          type: newAlertTypes[Math.floor(Math.random() * newAlertTypes.length)],
-          message: `New alert detected in Field ${String.fromCharCode(
-            65 + Math.floor(Math.random() * 8)
-          )}`,
-          severity: ["high", "medium", "low"][Math.floor(Math.random() * 3)] as
-            | "high"
-            | "medium"
-            | "low",
-          time: new Date().toLocaleTimeString(),
-          read: false,
-        };
-        setAlerts((prev) => [newAlert, ...prev]);
+        // const newAlert: EmergencyAlert = {
+        //   id: crypto.randomUUID(),
+        //   type: newAlertTypes[Math.floor(Math.random() * newAlertTypes.length)],
+        //   message: `New alert detected in Field ${String.fromCharCode(
+        //     65 + Math.floor(Math.random() * 8)
+        //   )}`,
+        //   severity: ["high", "medium", "low"][Math.floor(Math.random() * 3)] as
+        //     | "high"
+        //     | "medium"
+        //     | "low",
+        //   time: new Date().toLocaleTimeString(),
+        //   read: false,
+        // };
+        // setAlerts((prev) => [newAlert, ...prev]);
       }
     }, 5000);
 

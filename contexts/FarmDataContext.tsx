@@ -16,7 +16,7 @@ import { useSoilMoistureData } from "../hooks/UseSoilMoistureData";
 import type {
   CropYieldData,
   SoilMoistureData,
-  Alert,
+  EmergencyAlert,
   Field,
   Equipment,
   WeatherData,
@@ -28,7 +28,7 @@ type FarmDataContextType = {
   isInitialized: boolean;
   cropYieldData: CropYieldData[];
   soilMoistureData: SoilMoistureData[];
-  alerts: Alert[];
+  alerts: EmergencyAlert[];
   fieldData: Field[];
   equipmentData: Equipment[];
   currentWeather: WeatherData | null;
@@ -69,12 +69,12 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
     if (errors.length === 0) return null;
 
     // Convert all errors to Error instances if they aren't already
-    const errorObjects = errors.map(err => 
+    const errorObjects = errors.map(err =>
       err instanceof Error ? err : new Error(String(err))
     );
 
     // Combine multiple errors into one
-    return errorObjects.length === 1 
+    return errorObjects.length === 1
       ? errorObjects[0]
       : new Error(errorObjects.map(e => e.message).join('; '));
   }, [farmData.error, weatherData.error, equipmentData.error, farmStatusData.error, soilMoistureData.error]);
@@ -99,14 +99,14 @@ export const FarmDataProvider = ({ children }: { children: ReactNode }) => {
         weatherData.refresh(),
         equipmentData.refetch(),
         soilMoistureData.fetchSoilMoistureData()
-        
+
       ]);
     },
     isLoading: Boolean(
-      farmData.loading || 
-      weatherData.loading || 
+      farmData.loading ||
+      weatherData.loading ||
       equipmentData.loading ||
-      farmStatusData.loading||
+      farmStatusData.loading ||
       soilMoistureData.loading
     ),
     error: normalizedError

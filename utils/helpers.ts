@@ -1,4 +1,4 @@
-import { Alert } from "./types";
+import { EmergencyAlert } from "./types";
 
 // Format date to readable string
 export const formatDate = (dateString: string) => {
@@ -35,6 +35,6 @@ export const getBatteryIcon = (percentage: number) => {
 };
 
 // Filter alerts by read status
-export const filterAlerts = (alerts: Alert[], showRead: boolean) => {
+export const filterAlerts = (alerts: EmergencyAlert[], showRead: boolean) => {
   return showRead ? alerts : alerts.filter((alert) => !alert.read);
 };

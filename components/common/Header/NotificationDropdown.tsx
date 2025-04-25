@@ -36,10 +36,9 @@ const NotificationDropdown = () => {
             {alerts.slice(0, 5).map((alert) => (
               <div
                 key={alert.id}
-                className={`p-3 border-b ${
-                  !alert.read ? "bg-blue-50" : "bg-white"
-                }`}
-                onClick={() => markAlertAsRead(alert.id)}
+                className={`p-3 border-b ${!alert.read ? "bg-blue-50" : "bg-white"
+                  }`}
+                onClick={() => alert.id && markAlertAsRead(alert.id)}
               >
                 <div className="flex justify-between">
                   <span className="font-medium">{alert.type}</span>

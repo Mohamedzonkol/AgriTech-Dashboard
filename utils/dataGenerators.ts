@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { EmergencyType, SeverityType } from "./types";
 
 // Generate mock crop yield data
 export const generateCropYieldData = () => {
@@ -40,30 +41,30 @@ export const generateEquipmentData = () => {
 // Generate mock alerts
 export const generateAlerts = () => {
   const alertTypes = [
-    { type: "Irrigation", severity: "high" as const },
-    { type: "Pest", severity: "medium" as const },
-    { type: "Equipment", severity: "low" as const },
-    { type: "Weather", severity: "high" as const },
-    { type: "Soil", severity: "medium" as const },
+    { type: EmergencyType.Irrigation, severity: SeverityType.High },
+    { type: EmergencyType.Pest, severity: SeverityType.Medium },
+    { type: EmergencyType.EquipmentFailure, severity: SeverityType.Low },
+    { type: EmergencyType.SevereWeather, severity: SeverityType.High },
+    { type: EmergencyType.Soil, severity: SeverityType.Medium },
   ];
   return Array.from({ length: 5 }, (_, i) => ({
     id: faker.string.uuid(),
     type: alertTypes[i % alertTypes.length].type,
     message: [
       `Low moisture detected in Field ${String.fromCharCode(65 + i)}`,
-      `Pest activity reported in ${
-        ["Wheat", "Corn", "Soy", "Barley"][i % 4]
+      `Pest activity reported in ${["Wheat", "Corn", "Soy", "Barley"][i % 4]
       } field`,
-      `${
-        ["Tractor", "Harvester", "Irrigator", "Seeder"][i % 4]
+      `${["Tractor", "Harvester", "Irrigator", "Seeder"][i % 4]
       } requires maintenance`,
-      `Storm warning for ${
-        ["tomorrow", "the weekend", "next week", "tonight"][i % 4]
+      `Storm warning for ${["tomorrow", "the weekend", "next week", "tonight"][i % 4]
       }`,
       `High pH level detected in Field ${String.fromCharCode(65 + i)}`,
     ][i % 5],
     severity: alertTypes[i % alertTypes.length].severity,
-    time: faker.date.recent({ days: 2 }).toLocaleTimeString(),
+    latitude: faker.number.float({ min: 30, max: 31, fractionDigits: 6 }),
+    longitude: faker.number.float({ min: 26, max: 27, fractionDigits: 6 }),
+    locationDescription: `Field ${String.fromCharCode(65 + i)}`,
+    createdAt: faker.date.recent({ days: 2 }),
     read: i > 2,
   }));
 };

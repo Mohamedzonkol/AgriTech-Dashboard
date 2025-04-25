@@ -133,7 +133,7 @@ const AlertCard = () => {
               <div className="inline-flex flex-col items-center text-gray-400">
                 <AlertTriangle className="w-8 h-8 mb-2 opacity-60" />
                 <span>No active alerts</span>
-                <span className="text-xs mt-1">You're all caught up</span>
+                <span className="text-xs mt-1">You&apos;re all caught up</span>
               </div>
             </div>
           ) : (
