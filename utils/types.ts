@@ -31,19 +31,38 @@ export interface FarmStatus {
   pestRisk: string;
   waterReservoir: number;
   solarGeneration: number;
-
 }
 
-// Alert types
-export interface Alert {
-  id: string;
-  type: string;
+
+export enum EmergencyType {
+  EquipmentFailure = "equipment",
+  MedicalEmergency = "medical",
+  Fire = "fire",
+  SevereWeather = "weather",
+  Pest = "pest",
+  Irrigation = "irrigation",
+  Soil = "soil",
+  Other = "other"
+}
+export enum SeverityType {
+  High = "High",
+  Medium = "Medium",
+  Low = "Low",
+  Critical = "Critical"
+}
+// EmergencyAlert Interface
+export interface EmergencyAlert {
+  id?: string;
+  type: EmergencyType;
   message: string;
-  severity: "high" | "medium" | "low";
-  time: string;
-  read: boolean;
+  severity: SeverityType;
+  latitude: number;
+  longitude: number;
+  locationDescription: string;
+  createdAt: Date;
+  read?: boolean;
+  time?: string;
 }
-
 // Equipment types
 export interface Equipment {
   id: string;

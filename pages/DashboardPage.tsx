@@ -54,16 +54,12 @@ const DashboardContent = () => {
 
       <FarmStatusCard />
 
-      <AlertCard
-        alerts={alerts}
-        unreadCount={unreadAlerts}
-        // loading={isLoading && !alerts}
-      />
+      <AlertCard />
 
       {/* Middle Column */}
       <YieldChart
         data={cropYieldData}
-        // loading={isLoading && !cropYieldData}
+      // loading={isLoading && !cropYieldData}
       />
 
       <SoilMoistureChart
@@ -86,7 +82,7 @@ const DashboardContent = () => {
 
       <EnergyMonitoringCard
         generation={farmStatus?.solarGeneration}
-        // loading={isLoading && !farmStatus}
+      // loading={isLoading && !farmStatus}
       />
     </div>
   );

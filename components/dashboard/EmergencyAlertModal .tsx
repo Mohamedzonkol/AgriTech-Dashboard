@@ -30,7 +30,6 @@ const EmergencyAlertModal = () => {
   return (
     
     <>
-      {/* Button to open the modal */}
       <button
         onClick={() => setIsOpen(true)}
         className="relative bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 col-span-2 text-white py-3 px-6 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 hover:-translate-y-0.5"
@@ -39,7 +38,6 @@ const EmergencyAlertModal = () => {
         <span>Emergency Alert</span>
       </button>
 
-      {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 ">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full  max-h-[90vh]">

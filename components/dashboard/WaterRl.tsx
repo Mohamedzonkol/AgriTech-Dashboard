@@ -29,29 +29,29 @@ const SmartIrrigationButton = () => {
   });
   const [error, setError] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
-const baseUrl="https://crop-pilot-api.azurewebsites.net/api/AIModel";
+  const baseUrl = "https://crop-pilot-api.azurewebsites.net/api/AIModel";
   const fetchCurrentValues = async () => {
-    setLoading(prev => ({...prev, current: true}));
+    setLoading(prev => ({ ...prev, current: true }));
     setError(null);
     try {
       const response = await fetch(`${baseUrl}/GetCurrentValue`);
       if (!response.ok) throw new Error("Failed to fetch current values");
       const data = await response.json();
       if (!data.succeeded) throw new Error(data.message);
-      
+
       setCurrentValues(data.data);
       setModifiedValues(data.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unknown error occurred");
     } finally {
-      setLoading(prev => ({...prev, current: false}));
+      setLoading(prev => ({ ...prev, current: false }));
     }
   };
 
   const getWateringFeedback = async () => {
     if (!modifiedValues) return;
-    
-    setLoading(prev => ({...prev, feedback: true}));
+
+    setLoading(prev => ({ ...prev, feedback: true }));
     setError(null);
     try {
       const response = await fetch(`${baseUrl}/wateringFeedback`, {
@@ -63,17 +63,17 @@ const baseUrl="https://crop-pilot-api.azurewebsites.net/api/AIModel";
           ...modifiedValues
         }),
       });
-      
+
       if (!response.ok) throw new Error("Failed to get watering feedback");
       const data = await response.json();
       if (!data.succeeded) throw new Error(data.message);
-      
+
       setFeedback(data.data);
       setShowResult(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unknown error occurred");
     } finally {
-      setLoading(prev => ({...prev, feedback: false}));
+      setLoading(prev => ({ ...prev, feedback: false }));
     }
   };
 
@@ -108,8 +108,8 @@ const baseUrl="https://crop-pilot-api.azurewebsites.net/api/AIModel";
   }, [isOpen]);
 
   const getDecisionColor = (action: number) => {
-    return action === 1 
-      ? "bg-blue-50 border border-blue-100 text-blue-800" 
+    return action === 1
+      ? "bg-blue-50 border border-blue-100 text-blue-800"
       : "bg-amber-50 border border-amber-100 text-amber-800";
   };
 
@@ -119,7 +119,7 @@ const baseUrl="https://crop-pilot-api.azurewebsites.net/api/AIModel";
         onClick={() => setIsOpen(true)}
         className="relative bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
 
->
+      >
         <div className="absolute -top-2 -right-2 bg-white text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm">
           AI
         </div>
@@ -176,14 +176,29 @@ const baseUrl="https://crop-pilot-api.azurewebsites.net/api/AIModel";
                           <Sliders className="w-5 h-5 mr-2 text-blue-500" />
                           Adjust Parameters
                         </h3>
-                        <button 
+                        <button
                           onClick={resetToCurrent}
-                          className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                          className="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
+
                         >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M3 10h4l3-3m0 0l3 3h4m-4 0v4a4 4 0 01-4 4H7a4 4 0 01-4-4v-4"
+                            />
+                          </svg>
                           Reset to current
                         </button>
                       </div>
-                      
+
                       <div className="space-y-5">
                         {[
                           { label: "Temperature", value: modifiedValues.temperature, unit: "°C", field: "temperature", min: 10, max: 50, step: 0.1 },
@@ -208,10 +223,10 @@ const baseUrl="https://crop-pilot-api.azurewebsites.net/api/AIModel";
                               max={param.max}
                               step={param.step}
                               value={param.value}
-                              onChange={(e) => 
+                              onChange={(e) =>
                                 handleValueChange(
-                                  param.field as keyof CurrentValues, 
-                                  param.transform 
+                                  param.field as keyof CurrentValues,
+                                  param.transform
                                     ? param.transform(parseFloat(e.target.value))
                                     : parseFloat(e.target.value)
                                 )
@@ -232,11 +247,10 @@ const baseUrl="https://crop-pilot-api.azurewebsites.net/api/AIModel";
                             <Gauge className="w-5 h-5 mr-2" />
                             <h3 className="font-semibold">Irrigation Recommendation</h3>
                           </div>
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            feedback.action === 1 
-                              ? "bg-blue-100 text-blue-800" 
-                              : "bg-amber-100 text-amber-800"
-                          }`}>
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${feedback.action === 1
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-amber-100 text-amber-800"
+                            }`}>
                             {feedback.decision}
                           </span>
                         </div>
